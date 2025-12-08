@@ -68,7 +68,12 @@ function init() {
 
       // Add event listeners for real-time preview
   document.getElementById('questionInput').addEventListener('input', updateQuestionPreview);
-  loadQuestionsFromDB();
+
+  loadQuestionsFromDB().catch(error => {
+        console.log("MongoDB load failed, trying localStorage:", error);
+        loadFromLocalStorage();
+    });
+  getTotalQuestionsFromDBCount();
 }
     
 // Firebase Authentication Functions
@@ -349,7 +354,14 @@ async function loadQuestionsFromDB() {
         
         const questions = await response.json();
         console.log(`✅ Loaded ${questions.length} questions from DB`);
-        console.log("Questions data:", questions);
+      console.log("Questions data:", questions);
+      
+      //count total questions in DB
+        const count = questions.length;
+        
+        document.getElementById('dbQuestionCount').textContent = count;
+        document.getElementById('dbQuestionCount').style.color = '#059669';
+        document.getElementById('dbQuestionCount').style.fontWeight = 'bold';
         
         // Convert DB format to app format
         quizQuestions = questions.map(q => ({
@@ -481,13 +493,65 @@ async function loadQuestionsFromDB() {
     });
     }
 
-    function removeQuestion(index) {
-      if (confirm('Are you sure you want to remove this question?')) {
+//remove question from db and array
+
+  async function removeQuestion(index) {
+    if (!confirm('Are you sure you want to remove this question?')) return;
+    
+    const question = quizQuestions[index];
+    
+    try {
+        // Delete from MongoDB if it has an _id
+        if (question._id) {
+            const response = await fetch(`/api/questions/${question._id}`, {
+                method: 'DELETE'
+            });
+            
+            if (!response.ok) {
+                throw new Error('Failed to delete from database');
+            }
+            
+            console.log(`🗑️ Deleted from MongoDB: ${question._id}`);
+        }
+        
+        // Remove from local array
         quizQuestions.splice(index, 1);
         updateTeacherStats();
         updateQuestionsList();
-      }
+        
+        alert('✅ Question removed from database!');
+    } catch (error) {
+        console.error('❌ Error:', error);
+        alert('Failed to delete question from database. Removed locally only.');
+        
+        // Fallback: Remove locally
+        quizQuestions.splice(index, 1);
+        updateTeacherStats();
+        updateQuestionsList();
     }
+}
+
+
+// Database status updater
+function updateDBStatus() {
+    const dbStatus = document.getElementById('dbStatus');
+    const dbQuestionCount = document.getElementById('dbQuestionCount');
+    
+    if (dbStatus) {
+        dbStatus.innerHTML = `
+            <span class="mr-2">✅</span>
+            <span>Connected to MongoDB</span>
+        `;
+        dbStatus.className = "flex items-center text-green-600";
+    }
+    
+    if (dbQuestionCount) {
+        dbQuestionCount.textContent = quizQuestions.length;
+    }
+}
+
+// loadQuestionsFromDB ফাংশনের শেষে কল করুন
+updateDBStatus();
 
     function publishQuiz() {
       if (quizQuestions.length === 0) {

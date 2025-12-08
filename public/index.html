@@ -196,7 +196,44 @@
           <p style="text-align: center; color: #64748b; font-style: italic;">No questions added yet...</p>
         </div>
       </div>
+
+
+      <!-- Teacher Dashboard এর যেকোনো স্থানে যোগ করুন -->
+
+
+      <div
+        style="background: #f8f9fa; padding: 16px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #e2e8f0;">
+        <h3 style="font-weight: bold; font-size: 18px; margin-bottom: 10px; color: #2d3748;">📊 Database Status</h3>
+        <div id="dbStatus" style="display: flex; align-items: center; margin-bottom: 8px;">
+          <span style="animation: spin 1s linear infinite; margin-right: 8px;">🔄</span>
+          <span>Connecting to database...</span>
+        </div>
+        <div style="font-size: 14px; color: #4a5568;">
+          Questions in DB: <span id="dbQuestionCount" style="font-weight: bold;">0</span>
+        </div>
+      </div>
+
+      <style>
+        @keyframes spin {
+          0% {
+            transform: rotate(0deg);
+          }
+
+          100% {
+            transform: rotate(360deg);
+          }
+        }
+
+        .connected {
+          color: #059669 !important;
+        }
+
+        .disconnected {
+          color: #dc2626 !important;
+        }
+      </style>
     </div>
+  </div>
   </div>
 
   <!-- Student Dashboard -->
