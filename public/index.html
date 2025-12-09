@@ -35,7 +35,7 @@
     <p class="landing-subtitle">Modern Learning Platform with Mathematical Support</p>
 
     <div class="role-selection">
-      <div class="role-card teacher-card" onclick="showTeacherDashboard()">
+      <div class="role-card teacher-card" onclick="goToStudentLogRegPage()">
         <span class="role-icon">👩‍🏫</span>
         <h2 class="role-title">Teacher Dashboard</h2>
         <p class="role-description">Create and manage comprehensive quizzes with mathematical equations</p>
@@ -48,7 +48,7 @@
         </ul>
       </div>
 
-      <div class="role-card student-card" onclick="showStudentDashboard()">
+      <div class="role-card student-card" onclick="goToStudentLogRegPage()">
         <span class="role-icon">🎓</span>
         <h2 class="role-title">Student Dashboard</h2>
         <p class="role-description">Take interactive quizzes with full mathematical equation support</p>
@@ -326,7 +326,8 @@
       </div>
     </div>
   </div>
-  <script src="script.js">
+  <script src="script.js">console.log("GLOBAL TEST:", window.goToStudentLogRegPage);
+
   </script>
 </body>
 

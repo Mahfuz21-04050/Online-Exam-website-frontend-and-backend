@@ -1,18 +1,4 @@
-//firebase
 
-const firebaseConfig = {
-  apiKey: "AIzaSyBrjs2DsRDXTMqchm_fMXE_5ID14-JaZc0",
-  authDomain: "online-exam-app-21e2c.firebaseapp.com",
-  projectId: "online-exam-app-21e2c",
-  storageBucket: "online-exam-app-21e2c.firebasestorage.app",
-  messagingSenderId: "381220508651",
-  appId: "1:381220508651:web:520a7f02bad008f42f7fae",
-  measurementId: "G-RFL3WQBL4Z"
-};
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore();
 
 
 
@@ -62,7 +48,7 @@ const db = firebase.firestore();
 
     // Initialize the application
 function init() {
-      setupAuthStateListener();
+      
       updateTeacherStats();
       updateStudentStats();
 
@@ -76,21 +62,7 @@ function init() {
   getTotalQuestionsFromDBCount();
 }
     
-// Firebase Authentication Functions
-function setupAuthStateListener() {
-  auth.onAuthStateChanged((user) => {
-    currentUser = user;
-    if (user) {
-      // User is signed in
-      console.log('User signed in:', user.email);
-      updateUIForUser(user);
-    } else {
-      // User is signed out
-      console.log('User signed out');
-      showLandingPage();
-    }
-  });
-}
+
 
     // Navigation functions
     function showLandingPage() {
@@ -978,9 +950,25 @@ function autoWrapMath(text) {
       const mins = Math.floor(seconds / 60);
       const secs = seconds % 60;
       return `${mins}:${secs.toString().padStart(2, '0')}`;
-    }
+}
+    
+
+//login and registration page redirect function
+function goToStudentLogRegPage() {
+  window.location.href = "/studentsLogReg.html";
+  console.log("Redirecting to student login/registration page...");
+}
 
     // Initialize app
-    window.addEventListener('load', function () {
-      init();
-    });
+window.addEventListener('load', function () {
+    const show = localStorage.getItem('showSuccess');
+    if (show === 'true') {
+        showStudentDashboard();  // ✅ এই ফাংশন already hideAllSections() + remove('hidden') handle করে
+        localStorage.removeItem('showSuccess'); // reset
+    } else {
+        showLandingPage(); // landing page দেখানোর জন্য
+    }
+
+    init(); // app initialize
+});
+

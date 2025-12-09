@@ -2,13 +2,14 @@ const express = require("express");
 const app = express();
 const path = require("path");
 const mongoose = require("mongoose");
-const cors = require("cors"); // CORS package যোগ করুন
+const cors = require("cors");
 
 // Database connection
 mongoose.connect("mongodb://localhost:27017/online_exam_database")
     .then(() => console.log("✅ MongoDB Connected"))
     .catch(err => console.log(err));
 
+// Question schema
 const questionSchema = new mongoose.Schema({
     questionText: String,
     options: [String],
@@ -16,88 +17,70 @@ const questionSchema = new mongoose.Schema({
     createdAt: { type: Date, default: Date.now }
 });
 
-const Question1 = mongoose.model("Question", questionSchema);
-
-// CORS middleware যোগ করুন
-app.use(cors()); // সব রিকোয়েস্টের জন্য CORS allow করবে
+const Question = mongoose.model("Question", questionSchema);
 
 // Middleware
+app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
-// Home route
+// Student routes
+const studentsLogRegRouter = require('./studentsLogReg');
+app.use('/students', studentsLogRegRouter);
+
+// Home page
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-// API route to post questions
+//Student Registration and Login page
+app.get("/studentsLogReg", (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "studentsLogReg.html"));
+    
+});
+
+// Create question
 app.post("/api/questions", async (req, res) => {
     try {
-        console.log("📥 Received question data:", req.body);
-        
         const { questionText, options, correctAnswer } = req.body;
-        
-        // Validation
+
         if (!questionText || !options || options.length !== 4 || !correctAnswer) {
-            return res.status(400).json({ 
-                error: "Missing required fields or invalid data" 
-            });
+            return res.status(400).json({ error: "Invalid data" });
         }
-        
-        const newQuestion = new Question1({ 
-            questionText, 
-            options, 
-            correctAnswer 
-        });
-        
+
+        const newQuestion = new Question({ questionText, options, correctAnswer });
         await newQuestion.save();
-        
-        console.log("✅ Question saved to MongoDB:", newQuestion._id);
-        
-        res.status(201).json({ 
-            message: "Question saved successfully",
-            question: newQuestion
-        });
-    } catch (error) {
-        console.error("❌ Error saving question:", error);
-        res.status(500).json({ 
-            error: "Failed to save question",
-            details: error.message 
-        });
+
+        res.status(201).json({ message: "Question saved", question: newQuestion });
+    } catch (err) {
+        res.status(500).json({ error: "Error saving question" });
     }
 });
 
-// API route to get all questions
+// Get all questions
 app.get("/api/questions", async (req, res) => {
     try {
-        const questions = await Question1.find().sort({ createdAt: -1 });
-        console.log(`📤 Sending ${questions.length} questions to client`);
+        const questions = await Question.find().sort({ createdAt: -1 });
         res.json(questions);
-    } catch (error) {
-        console.error("❌ Error fetching questions:", error);
-        res.status(500).json({ error: "Failed to fetch questions" });
+    } catch (err) {
+        res.status(500).json({ error: "Error fetching questions" });
     }
 });
 
-// API route to delete a question
+// Delete question
 app.delete("/api/questions/:id", async (req, res) => {
     try {
-        const { id } = req.params;
-        const result = await Question1.findByIdAndDelete(id);
-        
-        if (!result) {
-            return res.status(404).json({ error: "Question not found" });
-        }
-        
-        console.log(`🗑️ Deleted question: ${id}`);
-        res.json({ message: "Question deleted successfully" });
-    } catch (error) {
-        console.error("❌ Error deleting question:", error);
-        res.status(500).json({ error: "Failed to delete question" });
+        const result = await Question.findByIdAndDelete(req.params.id);
+
+        if (!result) return res.status(404).json({ error: "Not found" });
+
+        res.json({ message: "Deleted successfully" });
+    } catch (err) {
+        res.status(500).json({ error: "Error deleting question" });
     }
 });
 
 const PORT = 3000;
 app.listen(PORT, () => {
-    console.log("🚀 Server is running on http://localhost:3000");
+    console.log(`🚀 Server running at http://localhost:${PORT}`);
 });
