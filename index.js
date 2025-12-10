@@ -25,8 +25,12 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
 // Student routes
-const studentsLogRegRouter = require('./studentsLogReg');
-app.use('/students', studentsLogRegRouter);
+ const authenticationRouter = require('./authentication');
+app.use('/authentication', authenticationRouter);
+
+// Teacher routes
+//const teacherLogRegRouter = require('./teacherLogReg');
+//app.use('/teachers', teacherLogRegRouter);
 
 // Home page
 app.get("/", (req, res) => {
@@ -35,7 +39,7 @@ app.get("/", (req, res) => {
 
 //Student Registration and Login page
 app.get("/studentsLogReg", (req, res) => {
-    res.sendFile(path.join(__dirname, "public", "studentsLogReg.html"));
+    res.sendFile(path.join(__dirname, "public", "authentication.html"));
     
 });
 

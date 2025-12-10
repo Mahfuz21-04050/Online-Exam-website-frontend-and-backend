@@ -955,16 +955,20 @@ function autoWrapMath(text) {
 
 //login and registration page redirect function
 function goToStudentLogRegPage() {
-  window.location.href = "/studentsLogReg.html";
+  window.location.href = "/authentication.html";
   console.log("Redirecting to student login/registration page...");
 }
 
     // Initialize app
 window.addEventListener('load', function () {
-    const show = localStorage.getItem('showSuccess');
-    if (show === 'true') {
+  const showstudent = localStorage.getItem('showstudent');
+  const showteacher= localStorage.getItem('showteacher');
+    if (showstudent === 'true') {
         showStudentDashboard();  // ✅ এই ফাংশন already hideAllSections() + remove('hidden') handle করে
-        localStorage.removeItem('showSuccess'); // reset
+        localStorage.removeItem('showstudent'); // reset
+    } else if (showteacher === 'true') {
+        showTeacherDashboard();
+        localStorage.removeItem('showteacher'); // reset
     } else {
         showLandingPage(); // landing page দেখানোর জন্য
     }

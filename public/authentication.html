@@ -399,6 +399,7 @@
   <script>
     // Global variables
     let selectedRole = 'teacher';
+    window.selectedRole = selectedRole;
     let isLoginMode = true;
 
     // Initialize App  
@@ -406,16 +407,22 @@
       console.log("App initialized without Firebase.");
     }
 
+
     // Role Selection
+
+
     function selectRole(role) {
       selectedRole = role;
-
+      window.selectedRole = role;
       document.getElementById('teacherRoleBtn').classList.remove('active');
       document.getElementById('studentRoleBtn').classList.remove('active');
       document.getElementById(role + 'RoleBtn').classList.add('active');
 
       clearMessage();
     }
+
+
+
 
     // Toggle Login / Register Form
     function toggleForm() {
@@ -449,7 +456,7 @@
       const email = document.getElementById('loginEmail').value.trim();
       const password = document.getElementById('loginPassword').value.trim();
 
-      const response = await fetch('http://localhost:3000/students/login', {
+      const response = await fetch('http://localhost:3000/authentication/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
@@ -457,13 +464,24 @@
 
       const data = await response.json();
 
+
       if (data.success) {
         showMessage("Login successful!", "success");
-        localStorage.setItem('showSuccess', 'true');
-        // Redirect or show dashboard
-        window.location.href = '/index.html';
-      } else {
-        showMessage(data.message, "error");
+        console.log("Logged in user data:", data);
+
+        if (data.role === "teacher") {
+          localStorage.setItem('showteacher', 'true');
+        } else {
+          localStorage.setItem('showstudent', 'true');
+        }
+
+        window.location.href = "/index.html";
+      }
+
+
+
+      else {
+        showMessage(data.message || "Login failed.", "error");
       }
     }
 
@@ -480,12 +498,12 @@
       showMessage("Registration request sent (No Firebase).", "success");
 
       //fetch server to create student account
-      fetch('http://localhost:3000/students/register', {
+      fetch('http://localhost:3000/authentication/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ name, email, password })
+        body: JSON.stringify({ name, role: window.selectedRole, email, password })
       })
         .then(response => response.json())
         .then(data => {
