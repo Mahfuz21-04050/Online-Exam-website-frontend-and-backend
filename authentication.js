@@ -107,17 +107,8 @@ router.post('/login', async (req, res) => {
 });
 
 
-//Fetch Teacher’s Questions
 
-router.get('/api/teachers/:teacherId', async (req, res) => {
-  try {
-    const teacherId = req.params.teacherId;
-    const questions = await Question.findById(teacherId);
-    res.json(questions);
-    console.log(questions);
-  } catch (err) {
-    res.status(500).json({ error: 'Error fetching teacher questions' });
-  }
-});
+
+
 
 module.exports = router;

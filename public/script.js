@@ -260,13 +260,16 @@ function addQuestion() {
         hasMath: hasMathContent(questionText) || [choice1, choice2, choice3, choice4].some(choice => hasMathContent(choice))
     };
 
-    // Try MongoDB first, fallback to localStorage
+  // Try MongoDB first, fallback to localStorage
+  
+  const teacherId = localStorage.getItem('userId');
     fetch("http://localhost:3000/api/questions", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({
+      body: JSON.stringify({
+            teacherId: teacherId,
             questionText: questionText,
             options: [choice1, choice2, choice3, choice4],
             correctAnswer: String.fromCharCode(65 + correctAnswer)
@@ -311,9 +314,11 @@ function addQuestion() {
 async function loadQuestionsFromDB() {
     try {
         console.log("🔄 Loading questions from MongoDB...");
-        
+      let id = localStorage.getItem('userId'); 
+      console.log("Fetching questions for user ID:", id);
         // সম্পূর্ণ URL ব্যবহার করুন
-        const response = await fetch('http://localhost:3000/api/questions');
+      const response = await fetch(`http://localhost:3000/api/questions/${id}`);
+      
         
         console.log("Fetch response status:", response.status);
         console.log("Fetch response ok:", response.ok);
