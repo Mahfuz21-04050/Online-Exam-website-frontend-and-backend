@@ -14,7 +14,7 @@ const AuthSchema = new mongoose.Schema({
 
 const Auth = mongoose.model('Auth', AuthSchema);
 
-// ===========================
+
 //   REGISTRATION ROUTE
 // ===========================
 router.post('/register', async (req, res) => {
@@ -91,7 +91,8 @@ router.post('/login', async (req, res) => {
       role: user.role,
       user: {
         name: user.name,
-        email: user.email
+        email: user.email,
+        id : user._id
       }
     });
 
