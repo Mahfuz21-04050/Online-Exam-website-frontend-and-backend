@@ -18,13 +18,13 @@ const Question = mongoose.model("Question", questionSchema);
 // Create question
 router.post("/api/questions", async (req, res) => {
     try {
-        const { questionText, options, correctAnswer } = req.body;
+        const { teacherID, questionText, options, correctAnswer } = req.body;
 
         if (!questionText || !options || options.length !== 4 || !correctAnswer) {
             return res.status(400).json({ error: "Invalid data" });
         }
 
-        const newQuestion = new Question({ questionText, options, correctAnswer });
+        const newQuestion = new Question({teacherID, questionText, options, correctAnswer });
         await newQuestion.save();
 
         res.status(201).json({ message: "Question saved", question: newQuestion });
