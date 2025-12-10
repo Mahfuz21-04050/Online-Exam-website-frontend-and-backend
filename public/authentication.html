@@ -466,10 +466,16 @@
 
 
       if (data.success) {
+        //Store user data in localStorage
+
+        localStorage.setItem("userId", data.user.id);
+        localStorage.setItem("role", data.user.role);
+
+
         showMessage("Login successful!", "success");
         console.log("Logged in user data:", data);
 
-        if (data.role === "teacher") {
+        if (data.user.role === "teacher") {
           localStorage.setItem('showteacher', 'true');
         } else {
           localStorage.setItem('showstudent', 'true');
