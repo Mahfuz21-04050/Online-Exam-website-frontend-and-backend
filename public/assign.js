@@ -57,14 +57,15 @@ async function loadStudents() {
 
 
 async function assignQuestions() {
-  const teacherId = localStorage.getItem("teacherId"); // login থেকে save করা ID
-  const studentSelect = document.getElementById('students');
-  const questionSelect = document.getElementById('questions');
+  const teacherId = localStorage.getItem("teacherId");
 
-  const studentIds = Array.from(studentSelect.selectedOptions).map(o => o.value);
-  const questionIds = Array.from(questionSelect.selectedOptions).map(o => o.value);
+  const studentIds = Array.from(document.querySelectorAll('.student-checkbox:checked'))
+                          .map(cb => cb.value);
 
-  if(studentIds.length === 0 || questionIds.length === 0){
+  const questionIds = Array.from(document.querySelectorAll('.question-checkbox:checked'))
+                           .map(cb => cb.value);
+
+  if (studentIds.length === 0 || questionIds.length === 0) {
     alert("Select at least one student and one question");
     return;
   }
@@ -72,20 +73,16 @@ async function assignQuestions() {
   try {
     const res = await fetch('http://localhost:3000/assignments/api/assigned-questions', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ teacherId, studentIds, questionIds })
     });
-    
+
     const data = await res.json();
-    if(res.ok) alert(data.message);
+    if (res.ok) alert(data.message);
     else alert(data.error);
+
   } catch (err) {
     console.error("Error assigning questions:", err);
     alert("Failed to assign questions");
   }
 }
-
-// পেজ লোড হলে auto-run
-loadStudents();
-loadQuestions();
-
