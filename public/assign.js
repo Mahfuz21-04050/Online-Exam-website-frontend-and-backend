@@ -1,24 +1,3 @@
-async function loadStudents() {
-  try {
-    const res = await fetch('http://localhost:3000/assignments/api/students');
-    if(!res.ok) throw new Error("Students API not responding");
-    const students = await res.json();
-
-    const studentSelect = document.getElementById('students');
-    studentSelect.innerHTML = '';
-
-    students.forEach(s => {
-      const option = document.createElement('option');
-      option.value = s._id;
-      option.text = `${s.name} (${s.email})`;
-      studentSelect.appendChild(option);
-    });
-
-  } catch (err) {
-    console.error("Error loading students:", err);
-    alert("Failed to load students");
-  }
-}
 
 async function loadQuestions() {
   try {
