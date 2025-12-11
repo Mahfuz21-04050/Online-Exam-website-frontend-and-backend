@@ -1,26 +1,59 @@
-
-async function loadQuestions() {
+async function loadStudents() {
   try {
-    const teacherId = localStorage.getItem("teacherId");
-    const res = await fetch(`http://localhost:3000/api/questions/${teacherId}`);
-    if(!res.ok) throw new Error("Questions API not responding");
-    const questions = await res.json();
+    const res = await fetch('http://localhost:3000/assignments/api/students');
+    if (!res.ok) throw new Error("Students API not responding");
+    const students = await res.json();
 
-    const questionSelect = document.getElementById('questions');
-    questionSelect.innerHTML = '';
+    const studentList = document.getElementById('studentsList');
+    studentList.innerHTML = "";
 
-    questions.forEach(q => {
-      const option = document.createElement('option');
-      checkbox.value = q._id;
-      checkbox.text = q.questionText;
-      questionSelect.appendChild(option);
+    students.forEach(s => {
+      const div = document.createElement('div');
+      div.className = "flex items-center gap-2 bg-gray-50 p-2 rounded-lg shadow-sm";
+
+      div.innerHTML = `
+        <input type="checkbox" class="student-checkbox w-4 h-4" value="${s._id}">
+        <label class="text-gray-800">${s.name} (${s.email})</label>
+      `;
+
+      studentList.appendChild(div);
     });
 
   } catch (err) {
-    console.error("Error loading questions:", err);
-    alert("Failed to load questions");
+    console.error("Error loading students:", err);
+    alert("Failed to load students");
   }
 }
+
+
+async function loadStudents() {
+  try {
+    const res = await fetch('http://localhost:3000/assignments/api/students');
+    if (!res.ok) throw new Error("Students API not responding");
+    const students = await res.json();
+
+    const studentList = document.getElementById('studentsList');
+    studentList.innerHTML = "";
+
+    students.forEach(s => {
+      const div = document.createElement('div');
+      div.className = "flex items-center gap-2 bg-gray-50 p-2 rounded-lg shadow-sm";
+
+      div.innerHTML = `
+        <input type="checkbox" class="student-checkbox w-4 h-4" value="${s._id}">
+        <label class="text-gray-800">${s.name} (${s.email})</label>
+      `;
+
+      studentList.appendChild(div);
+    });
+
+  } catch (err) {
+    console.error("Error loading students:", err);
+    alert("Failed to load students");
+  }
+}
+
+
 
 
 async function assignQuestions() {
