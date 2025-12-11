@@ -316,8 +316,16 @@ async function loadQuestionsFromDB() {
         console.log("🔄 Loading questions from MongoDB...");
       let id = localStorage.getItem('userId'); 
       console.log("Fetching questions for user ID:", id);
-        // সম্পূর্ণ URL ব্যবহার করুন
-      const response = await fetch(`http://localhost:3000/api/questions/${id}`);
+      console.log('role:', localStorage.getItem('role'));
+      const role = localStorage.getItem('role');
+      
+      // সম্পূর্ণ URL ব্যবহার করুন
+      let response;
+      if (role === 'student') {
+         response = await fetch(`http://localhost:3000/assignments/api/assigned-questions/${id}`);
+      } else {
+         response = await fetch(`http://localhost:3000/api/questions/${id}`);
+      }
       
         
         console.log("Fetch response status:", response.status);
@@ -596,7 +604,7 @@ updateDBStatus();
 
     // Student functions
     function updateStudentStats() {
-      document.getElementById('availableQuestions').textContent = quizQuestions.length+1;
+      document.getElementById('availableQuestions').textContent = quizQuestions.length;
     }
 
     function startStudentQuiz(quizType) {
@@ -609,6 +617,7 @@ updateDBStatus();
       let questionsToUse = [];
 
       if (quizType === 'teacher-quiz') {
+
         if (quizQuestions.length === 0) {
           alert('⚠️ No questions available! Teacher needs to create questions first.');
           return;

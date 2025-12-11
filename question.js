@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 
+
 // question Schema
 
 const questionSchema = new mongoose.Schema({
@@ -56,4 +57,7 @@ router.delete("/api/questions/:id", async (req, res) => {
         res.status(500).json({ error: "Error deleting question" });
     }
 });
-module.exports = router;
+
+
+
+module.exports = { router, Question };

@@ -469,15 +469,19 @@
         //Store user data in localStorage
 
         localStorage.setItem("userId", data.user.id);
-        localStorage.setItem("role", data.user.role);
+        localStorage.setItem("role", data.user.role); -
 
 
-        showMessage("Login successful!", "success");
+          showMessage("Login successful!", "success");
         console.log("Logged in user data:", data);
 
         if (data.user.role === "teacher") {
+          localStorage.setItem('role', 'teacher');
+          localStorage.setItem('teacherId', data.user.id);
           localStorage.setItem('showteacher', 'true');
         } else {
+          localStorage.setItem('role', 'student');
+          localStorage.setItem('studentId', data.user.id);
           localStorage.setItem('showstudent', 'true');
         }
 

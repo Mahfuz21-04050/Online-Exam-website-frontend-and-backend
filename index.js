@@ -31,23 +31,23 @@ app.get("/studentsLogReg", (req, res) => {
 
 // here we will import different routes
 // user routes
- const authenticationRouter = require('./authentication');
+const { router: authenticationRouter } = require('./authentication');
 app.use('/authentication', authenticationRouter);
 
 // question routes
-const questionRouter = require('./question');
+const { router: questionRouter } = require('./question');
 app.use('/', questionRouter);
 
 // result routes
-const resultRouter = require('./Results');
+const { router: resultRouter } = require('./Results');
 app.use('/results', resultRouter);
 
 // submission routes
-const submissionRouter = require('./Submissions');
+const { router: submissionRouter } = require('./Submissions');
 app.use('/submissions', submissionRouter);
 
 // assignments routes
-const assignmentRouter = require('./AssignedQuestions');
+const { router: assignmentRouter } = require('./AssignedQuestions');
 app.use('/assignments', assignmentRouter);
 
 

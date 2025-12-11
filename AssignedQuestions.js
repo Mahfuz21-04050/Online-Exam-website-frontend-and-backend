@@ -2,7 +2,8 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const Auth = require('./authentication').Auth; // User model
+const { Auth: Auth } = require('./authentication'); // User model
+const { Question: Question } = require('./question'); // Question model
 
 // AssignedQuestions Schema
 const AssignedSchema = new mongoose.Schema({
@@ -44,4 +45,18 @@ router.get("/api/students", async (req, res) => {
   }
 });
 
-module.exports = router;
+//show all questions for students
+router.get("/api/assigned-questions/:studentId", async (req, res) => {
+  try {
+    const { studentId } = req.params;
+    const assignments = await AssignedQuestion.find({ studentIds: studentId }).populate("questionIds");
+    const questions = assignments.flatMap(assignment => assignment.questionIds);
+    res.json(questions);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error fetching assigned questions" });
+  }
+});
+
+
+module.exports = { router, AssignedQuestion };

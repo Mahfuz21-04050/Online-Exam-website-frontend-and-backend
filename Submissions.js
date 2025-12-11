@@ -13,4 +13,4 @@ const SubmissionSchema = new mongoose.Schema({
 });
 const Submission = mongoose.model('Submission', SubmissionSchema);
 
-module.exports = router;
+module.exports = { router, Submission };
