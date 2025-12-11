@@ -59,7 +59,7 @@ function init() {
         console.log("MongoDB load failed, trying localStorage:", error);
         loadFromLocalStorage();
     });
-  getTotalQuestionsFromDBCount();
+  
 }
     
 
@@ -279,7 +279,7 @@ function addQuestion() {
     .then(data => {
         // MongoDB success
         question._id = data.question._id;
-        quizQuestions.push(question);
+        //quizQuestions.push(question);
         updateTeacherStats();
         updateQuestionsList();
         clearForm();
@@ -593,7 +593,7 @@ updateDBStatus();
 
     // Student functions
     function updateStudentStats() {
-      document.getElementById('availableQuestions').textContent = quizQuestions.length;
+      document.getElementById('availableQuestions').textContent = quizQuestions.length+1;
     }
 
     function startStudentQuiz(quizType) {
