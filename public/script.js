@@ -350,7 +350,10 @@ async function loadQuestionsFromDB() {
         }));
         
         updateTeacherStats();
-        updateQuestionsList();
+      updateQuestionsList();
+      updateStudentStats();
+      saveToLocalStorage(); // Backup to localStorage
+      
         
         console.log("Updated quizQuestions:", quizQuestions);
         
@@ -715,10 +718,7 @@ function autoWrapMath(text) {
         resetTimer();
       }
 
-      // Render math in the question and choices
-      if (window.MathJax) {
-        MathJax.typesetPromise([document.getElementById('currentQuestion'), document.getElementById('choicesContainer')]).catch((err) => console.log(err));
-      }
+      
     }
 
     function selectAnswer(index) {
