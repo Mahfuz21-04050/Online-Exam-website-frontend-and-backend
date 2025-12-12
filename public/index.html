@@ -25,6 +25,9 @@
 
   <!--tailwind css -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <!--Bootstrap CSS -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Custom CSS -->
   <link rel="stylesheet" href="styles.css">
 
@@ -242,6 +245,137 @@
           📤 Assign Selected Questions
         </button>
 
+      </div>
+
+
+
+      // exam created with tailwindcss
+
+
+      <style>
+        body {
+          font-family: 'Inter', sans-serif;
+          background-color: #f4f7fe;
+          color: #333;
+        }
+
+        .exam-card {
+          background: #ffffff;
+          border: none;
+          border-radius: 15px;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+          padding: 30px;
+          margin-top: 50px;
+        }
+
+        .form-label {
+          font-weight: 600;
+          color: #4a5568;
+        }
+
+        .form-control,
+        .form-select {
+          border-radius: 8px;
+          border: 1px solid #e2e8f0;
+          padding: 12px;
+        }
+
+        .form-control:focus {
+          box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
+          border-color: #4299e1;
+        }
+
+        .btn-primary {
+          background-color: #4361ee;
+          border: none;
+          padding: 12px 25px;
+          border-radius: 8px;
+          font-weight: 600;
+          transition: all 0.3s;
+        }
+
+        .btn-primary:hover {
+          background-color: #3730a3;
+          transform: translateY(-2px);
+        }
+
+        .list-box {
+          max-height: 200px;
+          overflow-y: auto;
+          border: 1px solid #e2e8f0;
+          border-radius: 8px;
+          padding: 10px;
+          background: #f8fafc;
+        }
+
+        .assign-item {
+          display: flex;
+          align-items: center;
+          padding: 8px;
+          border-bottom: 1px solid #edf2f7;
+        }
+
+        .assign-item:last-child {
+          border-bottom: none;
+        }
+
+        .assign-item input {
+          margin-right: 12px;
+        }
+      </style>
+
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-8">
+            <div class="exam-card">
+              <h2 class="text-center mb-4">📝 নতুন পরীক্ষা তৈরি করুন</h2>
+
+              <form id="examForm">
+                <div class="mb-3">
+                  <label class="form-label">পরীক্ষার শিরোনাম (Exam Title)</label>
+                  <input type="text" id="examTitle" class="form-control" placeholder="যেমন: Mid-term Exam 2024"
+                    required>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label">শুরুর সময় (Start Time)</label>
+                    <input type="datetime-local" id="startTime" class="form-control" required>
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label">শেষের সময় (End Time)</label>
+                    <input type="datetime-local" id="endTime" class="form-control" required>
+                  </div>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label">প্রতি প্রশ্নের মান (Marks per Question)</label>
+                  <input type="number" id="markPerQuestion" class="form-control" value="1" min="1" required>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label">শিক্ষার্থী নির্বাচন করুন</label>
+                    <div id="studentsList" class="list-box">
+                      <div class="text-muted p-2">লোড হচ্ছে...</div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label">প্রশ্ন নির্বাচন করুন</label>
+                    <div id="questionsList" class="list-box">
+                      <div class="text-muted p-2">লোড হচ্ছে...</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="text-center mt-4">
+                  <button type="submit" class="btn btn-primary w-100">Create Exam</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
       </div>
 
 
