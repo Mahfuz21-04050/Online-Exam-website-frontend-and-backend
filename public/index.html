@@ -19,15 +19,21 @@
 
   <!-- pdfmake-->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="script.js ">console.log("GLOBAL TEST:", window.goToStudentLogRegPage);
 
+  </script>
   <!-- assign script -->
   <script src="assign.js"></script>
+  <!-- exam.js -->
+  <script src="exam.js"></script>
 
   <!--tailwind css -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!--Bootstrap CSS -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+
   <!-- Custom CSS -->
   <link rel="stylesheet" href="styles.css">
 
@@ -206,178 +212,205 @@
         </div>
       </div>
 
-
-
-      <!-- Assign Questions Section -->
-      <!-- Assign Questions Section -->
-      <div class="bg-white/70 backdrop-blur-xl p-8 rounded-3xl shadow-2xl border border-gray-200/60">
-
-        <!-- Title -->
-        <h2 class="text-3xl font-bold text-gray-900 mb-6 tracking-tight flex items-center gap-3">
-          🎯 Assign Questions to Students
+      // Teacher Create & Assign Exam Section
+      <!-- Stylish Header -->
+      <div style="
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        padding: 30px;
+        border-radius: 22px;
+        margin-bottom: 35px;
+        color: white;
+        box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+    ">
+        <h2
+          style="font-size: 30px; font-weight: 800; margin-bottom: 8px; display: flex; align-items: center; gap: 12px;">
+          📚 Create New Exam
         </h2>
-
-        <!-- Select Students -->
-        <label class="block text-gray-700 font-semibold mb-2 text-sm">
-          Select Students
-        </label>
-        <select id="students" multiple class="w-full h-36 px-4 py-3 rounded-2xl border border-gray-300 bg-gray-50 
-                 hover:bg-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500
-                 transition-all text-gray-900 shadow-inner text-sm cursor-pointer
-                 outline-none duration-200 ease-in-out">
-        </select>
-
-        <!-- Select Questions -->
-        <label class="block text-gray-700 font-semibold mt-6 mb-2 text-sm">
-          Select Questions
-        </label>
-        <select id="questions" multiple class="w-full h-36 px-4 py-3 rounded-2xl border border-gray-300 bg-gray-50 
-                 hover:bg-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500
-                 transition-all text-gray-900 shadow-inner text-sm cursor-pointer
-                 outline-none duration-200 ease-in-out">
-        </select>
-
-        <!-- Assign Button -->
-        <button onclick="assignQuestions()" class="mt-6 w-full py-3 bg-gradient-to-r from-blue-600 to-blue-700 
-                 hover:from-blue-700 hover:to-blue-800 text-white font-semibold 
-                 rounded-2xl shadow-lg hover:shadow-xl transition-all 
-                 active:scale-95 flex items-center justify-center gap-2 text-lg">
-          📤 Assign Selected Questions
-        </button>
-
+        <p style="opacity: 0.95; font-size: 15px;">Assign questions & schedule exams with ease</p>
       </div>
 
 
+      <!-- Main Exam Creation Card -->
+      <div style="
+        background: white;
+        padding: 35px;
+        border-radius: 20px;
+        box-shadow: 0 25px 70px rgba(0,0,0,0.07);
+        border: 1px solid #ececec;
+        margin-bottom: 45px;
+    ">
 
-      // exam created with tailwindcss
+        <!-- Step 1 -->
+        <h3
+          style="font-size: 21px; font-weight: 700; color: #374151; margin-bottom: 25px; display: flex; gap: 12px; align-items: center;">
+          <span
+            style="background:#3b82f6; color:white; width:34px; height:34px; display:flex; align-items:center; justify-content:center; border-radius:10px;">1</span>
+          Basic Exam Information
+        </h3>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:25px; margin-bottom:25px;">
+          <!-- Exam Title -->
+          <div>
+            <label style="display:block; font-size:14px; font-weight:600; color:#4b5563; margin-bottom:6px;">Exam
+              Title</label>
+            <input id="examTitle" type="text" placeholder="e.g., Mid Term Exam – Math" style="
+                           width: 100%; padding: 15px; border-radius: 12px;
+                           border: 1px solid #d1d5db; font-size: 15px;
+                           transition: 0.25s; outline: none;
+                       "
+              onfocus="this.style.borderColor='#3b82f6'; this.style.boxShadow='0 0 0 3px rgba(59,130,246,0.18)'"
+              onblur="this.style.borderColor='#d1d5db'; this.style.boxShadow='none'">
+          </div>
+
+          <!-- Marks -->
+          <div>
+            <label style="display:block; font-size:14px; font-weight:600; color:#4b5563; margin-bottom:6px;">Marks Per
+              Question</label>
+            <input id="marksPerQuestion" type="number" min="1" value="1" style="
+                           width: 100%; padding: 15px; border-radius: 12px;
+                           border: 1px solid #d1d5db; font-size: 15px;
+                           transition: 0.25s; outline: none;
+                       "
+              onfocus="this.style.borderColor='#3b82f6'; this.style.boxShadow='0 0 0 3px rgba(59,130,246,0.18)'"
+              onblur="this.style.borderColor='#d1d5db'; this.style.boxShadow='none'">
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:25px;">
+          <!-- Start -->
+          <div>
+            <label style="display:block; font-size:14px; font-weight:600; color:#4b5563; margin-bottom:6px;">Start
+              Time</label>
+            <input id="startTime" type="datetime-local" style="
+                           width: 100%; padding: 15px; border-radius: 12px;
+                           border: 1px solid #d1d5db; font-size: 15px;
+                           transition: 0.25s; outline: none;
+                       "
+              onfocus="this.style.borderColor='#3b82f6'; this.style.boxShadow='0 0 0 3px rgba(59,130,246,0.18)'"
+              onblur="this.style.borderColor='#d1d5db'; this.style.boxShadow='none'">
+          </div>
+
+          <!-- End -->
+          <div>
+            <label style="display:block; font-size:14px; font-weight:600; color:#4b5563; margin-bottom:6px;">End
+              Time</label>
+            <input id="endTime" type="datetime-local" style="
+                           width: 100%; padding: 15px; border-radius: 12px;
+                           border: 1px solid #d1d5db; font-size: 15px;
+                           transition: 0.25s; outline: none;
+                       "
+              onfocus="this.style.borderColor='#3b82f6'; this.style.boxShadow='0 0 0 3px rgba(59,130,246,0.18)'"
+              onblur="this.style.borderColor='#d1d5db'; this.style.boxShadow='none'">
+          </div>
+        </div>
 
 
-      <style>
-        body {
-          font-family: 'Inter', sans-serif;
-          background-color: #f4f7fe;
-          color: #333;
-        }
+        <!-- Step 2 -->
+        <h3
+          style="font-size:21px; font-weight:700; color:#374151; margin:35px 0 20px; display:flex; gap:12px; align-items:center;">
+          <span
+            style="background:#10b981; color:white; width:34px; height:34px; border-radius:10px; display:flex; align-items:center; justify-content:center;">2</span>
+          Select Students & Questions
+        </h3>
 
-        .exam-card {
-          background: #ffffff;
-          border: none;
-          border-radius: 15px;
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-          padding: 30px;
-          margin-top: 50px;
-        }
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:30px;">
 
-        .form-label {
-          font-weight: 600;
-          color: #4a5568;
-        }
+          <!-- Students -->
+          <div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+              <label style="font-size:14px; font-weight:600; color:#4b5563;">Students</label>
+              <div style="display:flex; gap:10px;">
+                <button onclick="selectAllStudents()"
+                  style="padding:6px 12px; border-radius:6px; background:#f3f4f6;">Select
+                  All</button>
+                <button onclick="deselectAllStudents()"
+                  style="padding:6px 12px; border-radius:6px; background:#f3f4f6;">Deselect</button>
+              </div>
+            </div>
 
-        .form-control,
-        .form-select {
-          border-radius: 8px;
-          border: 1px solid #e2e8f0;
-          padding: 12px;
-        }
+            <div id="studentsContainer" style="
+                    height: 300px; border:1px solid #d1d5db;
+                    border-radius:12px; padding:10px; overflow-y:auto; background:#f9fafb;
+                ">
+              <div style="text-align:center; padding:40px; color:#9ca3af;">Loading students...</div>
+            </div>
 
-        .form-control:focus {
-          box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
-          border-color: #4299e1;
-        }
+            <div style="display:flex; justify-content:space-between; margin-top:8px; font-size:13px; color:#6b7280;">
+              <span id="selectedStudentsCount">0 selected</span>
+              <span id="totalStudentsCount">Total: 0</span>
+            </div>
+          </div>
 
-        .btn-primary {
-          background-color: #4361ee;
-          border: none;
-          padding: 12px 25px;
-          border-radius: 8px;
-          font-weight: 600;
-          transition: all 0.3s;
-        }
+          <!-- Questions -->
+          <div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+              <label style="font-size:14px; font-weight:600; color:#4b5563;">Questions</label>
+              <div style="display:flex; gap:10px;">
+                <button onclick="selectAllQuestions()"
+                  style="padding:6px 12px; border-radius:6px; background:#f3f4f6;">Select
+                  All</button>
+                <button onclick="deselectAllQuestions()"
+                  style="padding:6px 12px; border-radius:6px; background:#f3f4f6;">Deselect</button>
+              </div>
+            </div>
 
-        .btn-primary:hover {
-          background-color: #3730a3;
-          transform: translateY(-2px);
-        }
+            <div id="questionsContainer" style="
+                    height: 300px; border:1px solid #d1d5db;
+                    border-radius:12px; padding:10px; overflow-y:auto; background:#f9fafb;
+                ">
+              <div style="text-align:center; padding:40px; color:#9ca3af;">Loading questions...</div>
+            </div>
 
-        .list-box {
-          max-height: 200px;
-          overflow-y: auto;
-          border: 1px solid #e2e8f0;
-          border-radius: 8px;
-          padding: 10px;
-          background: #f8fafc;
-        }
-
-        .assign-item {
-          display: flex;
-          align-items: center;
-          padding: 8px;
-          border-bottom: 1px solid #edf2f7;
-        }
-
-        .assign-item:last-child {
-          border-bottom: none;
-        }
-
-        .assign-item input {
-          margin-right: 12px;
-        }
-      </style>
-
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col-md-8">
-            <div class="exam-card">
-              <h2 class="text-center mb-4">📝 নতুন পরীক্ষা তৈরি করুন</h2>
-
-              <form id="examForm">
-                <div class="mb-3">
-                  <label class="form-label">পরীক্ষার শিরোনাম (Exam Title)</label>
-                  <input type="text" id="examTitle" class="form-control" placeholder="যেমন: Mid-term Exam 2024"
-                    required>
-                </div>
-
-                <div class="row">
-                  <div class="col-md-6 mb-3">
-                    <label class="form-label">শুরুর সময় (Start Time)</label>
-                    <input type="datetime-local" id="startTime" class="form-control" required>
-                  </div>
-                  <div class="col-md-6 mb-3">
-                    <label class="form-label">শেষের সময় (End Time)</label>
-                    <input type="datetime-local" id="endTime" class="form-control" required>
-                  </div>
-                </div>
-
-                <div class="mb-3">
-                  <label class="form-label">প্রতি প্রশ্নের মান (Marks per Question)</label>
-                  <input type="number" id="markPerQuestion" class="form-control" value="1" min="1" required>
-                </div>
-
-                <div class="row">
-                  <div class="col-md-6 mb-3">
-                    <label class="form-label">শিক্ষার্থী নির্বাচন করুন</label>
-                    <div id="studentsList" class="list-box">
-                      <div class="text-muted p-2">লোড হচ্ছে...</div>
-                    </div>
-                  </div>
-
-                  <div class="col-md-6 mb-3">
-                    <label class="form-label">প্রশ্ন নির্বাচন করুন</label>
-                    <div id="questionsList" class="list-box">
-                      <div class="text-muted p-2">লোড হচ্ছে...</div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="text-center mt-4">
-                  <button type="submit" class="btn btn-primary w-100">Create Exam</button>
-                </div>
-              </form>
+            <div style="display:flex; justify-content:space-between; margin-top:8px; font-size:13px; color:#6b7280;">
+              <span id="selectedQuestionsCount">0 selected</span>
+              <span id="totalQuestionsCount">Total: 0</span>
             </div>
           </div>
         </div>
+
+
+        <!-- Step 3 -->
+        <h3
+          style="font-size:21px; font-weight:700; color:#374151; margin:35px 0 25px; display:flex; gap:12px; align-items:center;">
+          <span
+            style="background:#8b5cf6; color:white; width:34px; height:34px; border-radius:10px; display:flex; align-items:center; justify-content:center;">3</span>
+          Create & Assign Exam
+        </h3>
+
+        <button onclick="createAndAssignExam()" style="
+            width:100%; padding:18px; border:none; border-radius:14px;
+            background: linear-gradient(135deg,#3b82f6,#1d4ed8);
+            color:white; font-size:16px; font-weight:600;
+            cursor:pointer; transition:0.3s; display:flex; justify-content:center; gap:12px;
+        " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 10px 30px rgba(59,130,246,0.35)'"
+          onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+          📤 Create Exam & Assign
+        </button>
+
+        <p style="text-align:center; margin-top:12px; font-size:14px; color:#6b7280;">Students will immediately receive
+          the
+          exam.</p>
       </div>
 
+
+      <!-- Created Exams List -->
+      <div style="
+        background:white; padding:30px; border-radius:20px;
+        border:1px solid #ececec; box-shadow:0 20px 60px rgba(0,0,0,0.06);
+    ">
+        <h3 style="font-size:22px; font-weight:700; color:#374151; margin-bottom:20px; display:flex; gap:10px;">
+          📝 Created Exams
+        </h3>
+
+        <div id="examsList" style="min-height:140px;">
+          <div style="text-align:center; padding:40px; color:#9ca3af;">
+            <div
+              style="width:60px; height:60px; border:2px dashed #d1d5db; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 15px; font-size:24px;">
+              📝</div>
+            No exams created yet.
+          </div>
+        </div>
+      </div>
 
 
 
@@ -441,7 +474,7 @@
           <h3 class="quiz-card-title">📊 Teacher Created Quiz</h3>
           <div class="quiz-card-info">
             <span>📝 <span id="availableQuestions">0</span> Questions</span>
-            <span>⏱️ 30s per question</span>
+            <span id="examTime">⏱️</span>
           </div>
           <p class="quiz-card-description">
             Take the quiz created by your teacher with full mathematical equation support.
@@ -516,9 +549,7 @@
       </div>
     </div>
   </div>
-  <script src="script.js">console.log("GLOBAL TEST:", window.goToStudentLogRegPage);
 
-  </script>
 </body>
 
 </html>

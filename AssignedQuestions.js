@@ -7,24 +7,33 @@ const { Question: Question } = require('./question'); // Question model
 
 // AssignedQuestions Schema
 const AssignedSchema = new mongoose.Schema({
-  teacherId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  studentIds: [{ type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }],
-  questionIds: [{ type: mongoose.Schema.Types.ObjectId, ref: "Question", required: true }],
-  createdAt: { type: Date, default: Date.now }
-});
+ teacherID: { type: mongoose.Schema.Types.ObjectId, ref: 'Auth' }, // Reference to the teacher
+   studentIDs: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Auth' }], // Reference to the students
+   examTitle: String,
+   questionIds: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Question' }],
+   startTime: Date,
+  endTime: Date,
+   examTime: Number, // in minutes
+   markPerQuestion: Number,
+   totalMarks: Number,
+   createdAt: { type: Date, default: Date.now }
+ });
 
 const AssignedQuestion = mongoose.model('AssignedQuestion', AssignedSchema);
 
 // POST: Assign questions
 router.post("/api/assigned-questions", async (req, res) => {
   try {
-    const { teacherId, studentIds, questionIds } = req.body;
+    const { teacherID, studentIDs, examTitle, questionIds, startTime, endTime, examTime, markPerQuestion, totalMarks } = req.body;
 
-    if (!teacherId || !studentIds || studentIds.length === 0 || !questionIds || questionIds.length === 0) {
-      return res.status(400).json({ error: "Teacher, Students and Questions are required" });
+ if (!teacherID || !studentIDs || !examTitle || !questionIds || questionIds.length === 0 || !startTime || !endTime || !markPerQuestion || !examTime) {
+      return res.status(400).json({ error: "Teacher, Students, Questions, Start Time, End Time and Exam Time are required" });
     }
 
-    const newAssignment = new AssignedQuestion({ teacherId, studentIds, questionIds });
+    
+    const newAssignment = new AssignedQuestion({
+      teacherID, studentIDs, examTitle, questionIds, startTime, endTime, examTime, markPerQuestion, totalMarks
+    });
     await newAssignment.save();
 
     res.status(201).json({ message: "Questions assigned successfully", assignment: newAssignment });
@@ -49,13 +58,30 @@ router.get("/api/students", async (req, res) => {
 router.get("/api/assigned-questions/:studentId", async (req, res) => {
   try {
     const { studentId } = req.params;
-    const assignments = await AssignedQuestion.find({ studentIds: studentId }).populate("questionIds");
+    const assignments = await AssignedQuestion.find({ studentIDs: studentId }).populate("questionIds");
     const questions = assignments.flatMap(assignment => assignment.questionIds);
     res.json(questions);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Error fetching assigned questions" });
   }
+});
+
+
+// AssignedQuestions.js-তে এই রাউট যোগ করুন
+
+// GET: All exams for a specific teacher
+router.get("/api/assigned-questions/teacher/:teacherId", async (req, res) => {
+    try {
+        const { teacherId } = req.params;
+        const exams = await AssignedQuestion.find({ teacherID: teacherId })
+            .populate("studentIDs", "name email")
+            .populate("questionIds", "questionText");
+        res.json(exams);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Error fetching exams" });
+    }
 });
 
 

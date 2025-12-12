@@ -559,7 +559,7 @@ updateDBStatus();
 
       startQuiz('teacher-quiz', true);
     }
-
+// Export quiz as PDF
    async function exportQuizPDF() {
   if (quizQuestions.length === 0) {
     alert('⚠️ No questions to export!');
