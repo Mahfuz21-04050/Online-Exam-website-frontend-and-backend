@@ -338,91 +338,10 @@
           </div>
         </div>
 
-        <!-- Auto-calculate End Time (Optional) -->
-        <div class="flex items-center gap-3 mb-6">
-          <button type="button" onclick="calculateEndTime()"
-            class="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white text-sm font-semibold rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2">
-              </path>
-            </svg>
-            Auto-calculate End Time
-          </button>
-          <span class="text-xs text-gray-500">
-            Automatically sets end time based on start time and duration
-          </span>
-        </div>
 
-        <script>
-          function calculateEndTime() {
-            const startTimeInput = document.getElementById('startTime');
-            const durationInput = document.getElementById('totalTime');
-            const endTimeInput = document.getElementById('endTime');
 
-            if (!startTimeInput.value || !durationInput.value) {
-              alert('Please set start time and duration first');
-              return;
-            }
 
-            const startTime = new Date(startTimeInput.value);
-            const duration = parseInt(durationInput.value);
 
-            if (isNaN(duration) || duration <= 0) {
-              alert('Please enter a valid duration');
-              return;
-            }
-
-            // Add duration in minutes
-            const endTime = new Date(startTime.getTime() + duration * 60000);
-
-            // Format to YYYY-MM-DDThh:mm
-            const endTimeString = endTime.toISOString().slice(0, 16);
-            endTimeInput.value = endTimeString;
-
-            // Show success feedback
-            const button = event.target.closest('button');
-            const originalHTML = button.innerHTML;
-            button.innerHTML = `
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-          </svg>
-          Calculated!
-        `;
-            button.classList.add('bg-green-500', 'from-green-500', 'to-green-600', 'hover:from-green-600', 'hover:to-green-700');
-
-            setTimeout(() => {
-              button.innerHTML = originalHTML;
-              button.classList.remove('bg-green-500', 'from-green-500', 'to-green-600', 'hover:from-green-600', 'hover:to-green-700');
-            }, 2000);
-          }
-
-          // Set default date/time values
-          document.addEventListener('DOMContentLoaded', function () {
-            // Set start time to next hour
-            const now = new Date();
-            const nextHour = new Date(now);
-            nextHour.setHours(nextHour.getHours() + 1);
-            nextHour.setMinutes(0, 0, 0);
-
-            const startTimeInput = document.getElementById('startTime');
-            startTimeInput.value = nextHour.toISOString().slice(0, 16);
-
-            // Auto-calculate end time on start time change
-            startTimeInput.addEventListener('change', function () {
-              if (document.getElementById('totalTime').value) {
-                calculateEndTime();
-              }
-            });
-
-            // Auto-calculate end time on duration change
-            document.getElementById('totalTime').addEventListener('input', function () {
-              if (document.getElementById('startTime').value) {
-                calculateEndTime();
-              }
-            });
-          });
-        </script>
 
         <style>
           /* Custom styles for number input arrows */

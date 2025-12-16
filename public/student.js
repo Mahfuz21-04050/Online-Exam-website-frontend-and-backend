@@ -43,7 +43,7 @@ async function loadStudentExams() {
   );
 
   const examdata = await res.json();
-  console.log("examdatalength", attemptedExamIds);
+  
   let abslen = localStorage.getItem("absence");
   document.getElementById("absentExamsCount").textContent = examdata.length - abslen;
 
@@ -124,62 +124,111 @@ async function fetchResult() {
 
 
  
-
-
-
-
-
-        // Render active exams
+// Render active exams
 function renderActiveExams() {
-          
-  
+
+         
+
+ 
+
             const container = document.getElementById('activeExamsList');
+
             if (!container) return;
 
 
 
+
+
+
+
   document.getElementById("activeExamsCount").textContent =
+
     activeExams.length;
 
+
+
   if (activeExams.length === 0) {
+
     container.innerHTML = `
+
       <div class="empty-state">
+
         <i class="fas fa-clipboard-list"></i>
+
         <h3>No Active Exams</h3>
+
         <p>You don't have any active exams at the moment.</p>
+
       </div>
+
     `;
+
     return;
+
   }
 
+
+
             let html = '';
+
          activeExams.forEach(exam => {
-              
+
+             
+
             const endTime = new Date(exam.endTime);
+
             let statusClass = 'status-active';
-        
+
+       
+
  
+
                 html += `
+
                     <div class="exam-card active" onclick="startExam('${exam.examId}',${exam.markPerQuestion},${exam.examTime},'${exam.startTime}','${exam.teacherID}','${exam.examTitle}')">
+
                         <div class="exam-title">${exam.examTitle}</div>
+
                         <div class="exam-meta">
+
                             <span><i class="fas fa-question-circle"></i> ${exam.questionCount} Questions</span>
+
                             <span><i class="fas fa-star"></i> ${exam.totalMarks} Marks</span>
+
                             <span><i class="fas fa-clock"></i> ${exam.examTime}</span>
+
                         </div>
+
                         <div class="exam-status ${statusClass}">${exam.status}</div>
+
                         <div style="margin-top: 15px; font-size: 0.9rem; color: #666;">
+
                             <i class="fas fa-calendar-alt"></i> Available until: ${formatDate(endTime)}
+
                         </div>
+
                         <button class="btn btn-primary" style="margin-top: 15px; width: 100%;">
+
                             <i class="fas fa-play-circle"></i> Start Exam
+
                         </button>
+
                     </div>
+
                 `;
+
             });
 
+
+
             container.innerHTML = html;
-        }
+
+        } 
+
+
+
+
+
 
         // Render past exams
 async function renderPastExams() {
@@ -188,78 +237,150 @@ async function renderPastExams() {
 
   if (pastExams.length === 0) {
     container.innerHTML = `
-      <div class="empty-state">
-        <i class="fas fa-history"></i>
-        <h3>No Past Exams</h3>
-        <p>You haven't completed any exams yet.</p>
+      <div class="flex flex-col items-center justify-center py-16 px-6 bg-gradient-to-br from-indigo-50 to-purple-100 rounded-2xl border border-indigo-200 text-center shadow-lg">
+        <div class="w-20 h-20 bg-gradient-to-r from-indigo-400 to-purple-500 rounded-full flex items-center justify-center mb-6 shadow-xl">
+          <i class="fas fa-history text-3xl text-white"></i>
+        </div>
+        <h3 class="text-xl font-bold text-gray-700 mb-3">No Past Exams</h3>
+        <p class="text-gray-500 max-w-md">You haven't completed any exams yet. Your past exams will appear here once you complete them.</p>
       </div>
     `;
     return;
   }
 
   let html = '';
-  
-const AttendId =
-  JSON.parse(localStorage.getItem("attendID"))||[];
 
-console.log("attemptedExamIds:", AttendId);
+  let AttendId = JSON.parse(localStorage.getItem("attendID")) || [];
+  console.log("attemptedExamIds:", AttendId);
+
   for (const exam of pastExams) {
-
     // ✅ ATTENDED
     if (AttendId.includes(exam.examId)) {
-
+      const studentId1 = localStorage.getItem("userId");
       const res = await fetch(
-        `http://localhost:3000/results/api/studentsResultbyExamID/${exam.examId}`
+        `http://localhost:3000/results/api/studentsResult/${studentId1}/examID/${exam.examId}`
       );
-      const attendExresult = await res.json();
+      const Atetendedresult = await res.json();
+      Atetendedresult.data.forEach(result => {
 
-      attendExresult.forEach(result => {
+      
+        const percentageColor = result.percentage >= 80
+          ? 'from-emerald-500 to-teal-600'
+          : result.percentage >= 60
+            ? 'from-amber-500 to-orange-500'
+            : 'from-rose-500 to-pink-600';
+
+        const percentageBadgeColor = result.percentage >= 80
+          ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-lg'
+          : result.percentage >= 60
+            ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg'
+            : 'bg-gradient-to-r from-rose-500 to-pink-500 text-white shadow-lg';
+
         html += `
-          <div class="exam-card completed" onclick="viewExamResult('${result.examID}')">
-            <div class="exam-title">${result.examTitle}</div>
+          <div class="exam-card group relative overflow-hidden bg-gradient-to-br from-blue-50 to-cyan-100 border border-blue-200 rounded-2xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 transform cursor-pointer" onclick="viewExamResult('${result.examID}')">
+            <div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b ${percentageColor}"></div>
 
-            <div class="exam-meta">
-              <span><i class="fas fa-question-circle"></i> ${result.totalQuestions} Questions</span>
-              <span><i class="fas fa-star"></i> ${result.score}/${result.totalMarks} Marks</span>
-              <span><i class="fas fa-percentage"></i> ${result.percentage}%</span>
+            <div class="flex justify-between items-start mb-4">
+              <div class="flex-1">
+                <h3 class="text-lg font-bold text-blue-800 mb-2 group-hover:text-indigo-600 transition-colors">${result.examTitle}</h3>
+                <div class="flex items-center gap-4 text-sm text-blue-600">
+                  <span class="flex items-center gap-1.5">
+                    <i class="fas fa-question-circle text-blue-500"></i>
+                    <span>${result.totalQuestions} Questions</span>
+                  </span>
+                  <span class="flex items-center gap-1.5">
+                    <i class="fas fa-star text-amber-500"></i>
+                    <span>${result.score}/${result.totalMarks} Marks</span>
+                  </span>
+                </div>
+              </div>
+              <span class="${percentageBadgeColor} text-sm font-semibold px-4 py-1.5 rounded-full shadow-lg">
+                ${result.percentage}%
+              </span>
             </div>
 
-            <div class="exam-status status-completed">Completed</div>
-
-            <div style="margin-top:10px; font-size:0.9rem; color:#666;">
-              <i class="fas fa-calendar-check"></i>
-              Completed on: ${formatDate(new Date(result.date))}
+            <div class="mb-5">
+              <div class="flex justify-between text-xs font-medium text-blue-600 mb-1.5">
+                <span>Performance</span>
+                <span>${result.percentage}%</span>
+              </div>
+              <div class="w-full h-2 bg-blue-200 rounded-full overflow-hidden">
+                <div class="h-full bg-gradient-to-r ${percentageColor} rounded-full" style="width: ${result.percentage}%"></div>
+              </div>
             </div>
 
-            <button class="btn btn-success" style="margin-top:15px; width:100%;">
-              <i class="fas fa-chart-bar"></i> View Results
-            </button>
-          </div>
+            <div class="flex justify-between items-center pt-4 border-t border-blue-100">
+              <div class="flex items-center gap-2 text-sm text-blue-500">
+                <div class="w-8 h-8 bg-gradient-to-r from-indigo-100 to-purple-50 rounded-lg flex items-center justify-center shadow-inner">
+                  <i class="fas fa-calendar-check text-indigo-500 text-xs"></i>
+                </div>
+                <span>${formatDate(new Date(result.date))}</span>
+                
+                <span class="ml-4 bg-gradient-to-r from-emerald-100 to-teal-100 text-emerald-700 text-xs font-semibold px-3 py-1 rounded-full border border-emerald-200 shadow-sm">
+                  <i class="fas fa-check-circle mr-1"></i> Completed
+                </span>
+              </div>
+              
+              <button class="btn-exam-result bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-semibold py-2.5 px-6 rounded-xl transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 transform flex items-center gap-2 group-hover:shadow-2xl">
+                <i class="fas fa-chart-bar text-sm"></i>
+                View Results
+              </button>
+            </div>
+
+            </div>
         `;
       });
+      
     }
-
-    // ❌ ABSENT
+    // ❌ ABSENT (No change needed here)
     else {
       html += `
-        <div class="exam-card completed" style="border-left:5px solid #dc3545;">
-          <div class="exam-title">${exam.examTitle}</div>
+        <div class="exam-card relative overflow-hidden bg-gradient-to-br from-red-50 to-pink-50 border border-red-300 rounded-2xl p-6 shadow-lg cursor-not-allowed transition-all duration-300">
+          <div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-rose-600 to-red-700"></div>
 
-          <div class="exam-meta">
-            <span><i class="fas fa-question-circle"></i> ${exam.questionCount} Questions</span>
-            <span><i class="fas fa-star"></i> ${exam.totalMarks} Marks</span>
+          <div class="flex justify-between items-start mb-4">
+            <div class="flex-1">
+              <h3 class="text-lg font-bold text-red-800 mb-2">${exam.examTitle}</h3>
+              <div class="flex items-center gap-4 text-sm text-red-600">
+                <span class="flex items-center gap-1.5">
+                  <i class="fas fa-question-circle text-red-400"></i>
+                  <span>${exam.questionCount} Questions</span>
+                </span>
+                <span class="flex items-center gap-1.5">
+                  <i class="fas fa-star text-red-400"></i>
+                  <span>${exam.totalMarks} Marks</span>
+                </span>
+              </div>
+            </div>
+            <span class="bg-gradient-to-r from-red-500 to-rose-600 text-white text-sm font-semibold px-4 py-1.5 rounded-full shadow-lg">
+              Absent
+            </span>
           </div>
 
-          <div class="exam-status status-absent">Absent</div>
-
-          <div style="margin-top:10px; font-size:0.9rem; color:#dc3545;">
-            <i class="fas fa-times-circle"></i>
-            You did not attend this exam
+          <div class="mb-5 p-4 bg-gradient-to-r from-rose-100 to-red-100 border border-rose-300 rounded-xl shadow-inner">
+            <div class="flex items-start gap-3">
+              <div class="w-10 h-10 bg-gradient-to-r from-rose-600 to-red-600 rounded-lg flex items-center justify-center flex-shrink-0 shadow-md">
+                <i class="fas fa-times-circle text-white text-lg"></i>
+              </div>
+              <div>
+                <h4 class="text-sm font-semibold text-rose-800 mb-1">Exam Not Attended</h4>
+                <p class="text-xs text-rose-700">You missed this exam. It will not affect your overall performance.</p>
+              </div>
+            </div>
           </div>
 
-          <button class="btn btn-secondary" disabled style="margin-top:15px; width:100%;">
-            Absent
-          </button>
+          <div class="flex justify-between items-center pt-4 border-t border-red-200">
+            <div class="flex items-center gap-2 text-sm text-red-400">
+              <div class="w-8 h-8 bg-red-200 rounded-lg flex items-center justify-center shadow-inner">
+                <i class="fas fa-calendar-times text-red-600 text-xs"></i>
+              </div>
+              <span>Missed Exam</span>
+            </div>
+            <button class="bg-gradient-to-r from-red-400 to-rose-500 text-white font-semibold py-2.5 px-6 rounded-xl opacity-80 cursor-not-allowed flex items-center gap-2 shadow-md" disabled>
+              <i class="fas fa-ban text-sm"></i>
+              Absent
+            </button>
+          </div>
         </div>
       `;
     }
@@ -268,83 +389,152 @@ console.log("attemptedExamIds:", AttendId);
   container.innerHTML = html;
 }
 
+// Add this CSS for the button hover effect (No change needed here)
+const style = document.createElement('style');
+style.textContent = `
+  .btn-exam-result {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-exam-result::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.6s;
+  }
+
+  .btn-exam-result:hover::before {
+    left: 100%;
+  }
+
+  .exam-card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Changed hover shadow to be more vibrant blue/indigo */
+  .exam-card:hover:not(.cursor-not-allowed) {
+    border-color: #6366f1; /* Indigo-500 */
+    box-shadow: 0 10px 20px rgba(99, 102, 241, 0.25), 0 0 0 3px rgba(99, 102, 241, 0.15);
+  }
+`;
+document.head.appendChild(style);
  
 
 
 
+      // Render student results
+function renderStudentResults() {
+    const container = document.getElementById('detailedResultsList');
+    if (!container) return;
 
-        // Render student results
-        function renderStudentResults() {
-            const container = document.getElementById('detailedResultsList');
-            if (!container) return;
-
-            if (studentResults.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-chart-bar"></i>
-                        <h3>No Results Available</h3>
-                        <p>Complete some exams to see your results here.</p>
-                    </div>
-                `;
-                return;
-            }
-
-            let html = '<div style="display: grid; gap: 20px;">';
-
-            studentResults.forEach(result => {
-                html += `
-                    <div class="result-card" style="background: #f8f9fa; padding: 20px; border-radius: 10px; border-left: 5px solid #4361ee;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                            <h3 style="color: #212529;">${result.examTitle}</h3>
-                            <span class="exam-status ${result.percentage >= 80 ? 'status-active' : 'status-completed'}" 
-                                  style="background: ${result.percentage >= 80 ? '#d4edda' : '#e2e3e5'}; 
-                                         color: ${result.percentage >= 80 ? '#155724' : '#383d41'}">
-                                ${result.percentage}%
-                            </span>
-                        </div>
-                        
-                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 15px;">
-                            <div>
-                                <div style="font-size: 0.9rem; color: #666;">Score</div>
-                                <div style="font-size: 1.5rem; font-weight: bold; color: #4361ee;">
-                                    ${result.score}/${result.totalMarks}
-                                </div>
-                            </div>
-                            <div>
-                                <div style="font-size: 0.9rem; color: #666;">Time Taken</div>
-                                <div style="font-size: 1.5rem; font-weight: bold; color: #4361ee;">
-                                    ${formatTime(result.timeTaken)}
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div style="display: flex; gap: 20px; margin-top: 10px;">
-                            <div style="text-align: center;">
-                                <div style="font-size: 1.2rem; font-weight: bold; color: #28a745;">${result.correctAnswers}</div>
-                                <div style="font-size: 0.8rem; color: #666;">Correct</div>
-                            </div>
-                            <div style="text-align: center;">
-                                <div style="font-size: 1.2rem; font-weight: bold; color: #f72585;">${result.wrongAnswers}</div>
-                                <div style="font-size: 0.8rem; color: #666;">Wrong</div>
-                            </div>
-                            <div style="text-align: center;">
-                                <div style="font-size: 1.2rem; font-weight: bold; color: #4525f7ff;">${result.skippedQuestion}</div>
-                                <div style="font-size: 0.8rem; color: #666;">SKip</div>
-                            </div>
-                            
-                        </div>
-                        
-                        <button class="btn btn-primary" onclick="viewDetailedResult('${result.examId}')" 
-                                style="margin-top: 15px; width: 100%;">
-                            <i class="fas fa-search"></i> View Detailed Analysis
-                        </button>
-                    </div>
-                `;
-            });
-
-            html += '</div>';
-            container.innerHTML = html;
+    // --- Helper function for color/status classes (Tailwind-like) ---
+    const getStatusClasses = (percentage) => {
+        if (percentage >= 80) {
+            // Excellent
+            return {
+                border: 'border-l-4 border-emerald-500',
+                bg: 'bg-emerald-50',
+                percentBg: 'bg-gradient-to-r from-emerald-500 to-teal-600',
+                percentText: 'text-white shadow-md'
+            };
+        } else if (percentage >= 60) {
+            // Good
+            return {
+                border: 'border-l-4 border-yellow-500',
+                bg: 'bg-yellow-50',
+                percentBg: 'bg-gradient-to-r from-yellow-500 to-orange-500',
+                percentText: 'text-white shadow-md'
+            };
+        } else {
+            // Needs Improvement
+            return {
+                border: 'border-l-4 border-red-500',
+                bg: 'bg-red-50',
+                percentBg: 'bg-gradient-to-r from-red-500 to-pink-600',
+                percentText: 'text-white shadow-md'
+            };
         }
+    };
+
+    if (studentResults.length === 0) {
+        container.innerHTML = `
+            <div class="flex flex-col items-center justify-center py-16 px-6 bg-gradient-to-br from-indigo-50 to-purple-100 rounded-2xl border border-indigo-200 text-center shadow-lg">
+                <div class="w-16 h-16 bg-gradient-to-r from-indigo-400 to-purple-500 rounded-full flex items-center justify-center mb-4 shadow-xl">
+                    <i class="fas fa-chart-bar text-2xl text-white"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-700 mb-2">No Results Available</h3>
+                <p class="text-gray-500 max-w-md">Complete some exams to see your detailed results and performance analysis here.</p>
+            </div>
+        `;
+        return;
+    }
+
+    let html = '<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">'; // Modern grid layout
+
+    studentResults.forEach(result => {
+        const status = getStatusClasses(result.percentage);
+
+        // Score and Time formatting (Assuming you have a formatTime helper)
+        const scoreDisplay = `${result.score}/${result.totalMarks}`;
+        const timeDisplay = formatTime(result.timeTaken);
+
+        html += `
+            <div class="result-card p-6 rounded-2xl shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:shadow-2xl ${status.bg} border border-gray-100 ${status.border} cursor-pointer" 
+                 onclick="viewDetailedResult('${result.examId}')">
+                
+                <div class="flex justify-between items-start mb-4">
+                    <h3 class="text-lg font-extrabold text-gray-800">${result.examTitle}</h3>
+                    <span class="text-sm font-bold px-4 py-1.5 rounded-full ${status.percentBg} ${status.percentText}">
+                        ${result.percentage}%
+                    </span>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4 border-b border-t border-gray-200 py-4 mb-4">
+                    <div class="flex flex-col items-start">
+                        <div class="text-sm font-semibold text-gray-500 flex items-center mb-1">
+                            <i class="fas fa-star text-amber-500 mr-2"></i> Score
+                        </div>
+                        <div class="text-2xl font-black text-indigo-600">${scoreDisplay}</div>
+                    </div>
+                    <div class="flex flex-col items-start border-l border-gray-200 pl-4">
+                        <div class="text-sm font-semibold text-gray-500 flex items-center mb-1">
+                            <i class="fas fa-clock text-blue-500 mr-2"></i> Time Taken
+                        </div>
+                        <div class="text-2xl font-black text-indigo-600">${timeDisplay}</div>
+                    </div>
+                </div>
+
+                <div class="flex justify-around items-center mt-5">
+                    <div class="text-center">
+                        <div class="text-xl font-extrabold text-emerald-600">${result.correctAnswers}</div>
+                        <div class="text-xs font-medium text-gray-500">Correct</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-xl font-extrabold text-red-600">${result.wrongAnswers}</div>
+                        <div class="text-xs font-medium text-gray-500">Wrong</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-xl font-extrabold text-indigo-600">${result.skippedQuestion}</div>
+                        <div class="text-xs font-medium text-gray-500">Skipped</div>
+                    </div>
+                </div>
+                
+                <button onclick="event.stopPropagation(); viewDetailedResult('${result.examId}')" 
+                        class="mt-6 w-full py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-[1.01] flex items-center justify-center">
+                    <i class="fas fa-search mr-2"></i> View Detailed Analysis
+                </button>
+            </div>
+        `;
+    });
+
+    html += '</div>';
+    container.innerHTML = html;
+}
 
         // Switch tabs
         function switchTab(tabName) {
@@ -370,7 +560,8 @@ console.log("attemptedExamIds:", AttendId);
 
 function startExam(examId, mpq, duration, startTime, teacherID, examTitle)
 {    
-
+let AttendId = JSON.parse(localStorage.getItem("attendID")) || [];
+  console.log("attemptedExamIds:", AttendId);
           let now = new Date();
           localStorage.setItem("currentExamId", examId);
           localStorage.setItem("markPerquestion", mpq);
@@ -390,7 +581,7 @@ function startExam(examId, mpq, duration, startTime, teacherID, examTitle)
     return;
   }
   
-  else if (attemptedExamIds.includes(examId)) {
+  else if (AttendId.includes(examId)) {
     alert("You have already attempted this exam.");
     return;
   }
@@ -411,7 +602,7 @@ function startExam(examId, mpq, duration, startTime, teacherID, examTitle)
           const questionsCount = quizQuestions1.length; // For demo
           document.getElementById("questionMarks").textContent =(localStorage.getItem("markPerquestion")) + "Mark";
           document.getElementById("examQuestionsCount").textContent = `${questionsCount} Questions`;
-          document.getElementById("examTotalMarks").textContent = "Total: " + questionsCount * localStorage.getItem("markPerquestion") + " marks";
+          document.getElementById("examTotalMarks").textContent = "Total: " + (questionsCount * localStorage.getItem("markPerquestion")).toFixed(2) + " marks";
           document.getElementById("examTimeRemaining").textContent ="Time : " + localStorage.getItem("duration");
 
             let html = '';
@@ -529,6 +720,13 @@ function nextQuestionExam() {
 
         // Submit exam
 function submitExam() {
+  let examid = localStorage.getItem("currentExamId");
+  const submitted = localStorage.getItem(`submitted_${examid}`);
+
+if (submitted) {
+  alert("You have already submitted this exam!");
+  return;
+}
    displayQuestionAnalysis();
   const endexamTime = localStorage.getItem("endexamTime");
   const duration = Number(localStorage.getItem("duration")); // minutes
@@ -537,6 +735,7 @@ function submitExam() {
   const totalDuration = duration * 60; // in seconds
   const remainingSeconds = Math.ceil((endexamTime - now) / 1000);
   const timeTaken = totalDuration - remainingSeconds; // seconds
+  document.getElementById("timeTaken").textContent = timeTaken;
 
   localStorage.setItem("timeTaken", timeTaken);
 
@@ -544,6 +743,7 @@ function submitExam() {
 
   // send result to backend
   sendResultToDB(timeTaken);
+  localStorage.setItem(`submitted_${examID}`, "true");
 }
 
         // Show exam results
@@ -606,7 +806,7 @@ function displayQuestionAnalysis() {
 
   container.innerHTML = html;
 
-  const totalPossibleMarks = quizQuestions1.length * markPerQuestion;
+  const totalPossibleMarks = (quizQuestions1.length * markPerQuestion).toFixed(2);
   const percentage =
     totalPossibleMarks > 0 ? ((totalMarks / totalPossibleMarks) * 100).toFixed(2) : 0;
 
@@ -762,7 +962,7 @@ function remainingTime(duration) {
 
         // Show landing page
         function showLandingPage() {
-            alert('This would go back to the landing page in a real application.');
+            window.location.href = "/index.html";
         }
 
         // Utility functions

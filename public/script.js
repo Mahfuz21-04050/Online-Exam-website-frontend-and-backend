@@ -952,7 +952,7 @@ window.addEventListener('load', function () {
   const showstudent = localStorage.getItem('showstudent');
   const showteacher= localStorage.getItem('showteacher');
     if (showstudent === 'true') {
-        showStudentDashboard();  // ✅ এই ফাংশন already hideAllSections() + remove('hidden') handle করে
+      this.window.location.href = "/index.html"; // ✅ এই ফাংশন already hideAllSections() + remove('hidden') handle করে
         localStorage.removeItem('showstudent'); // reset
     } else if (showteacher === 'true') {
         showTeacherDashboard();
@@ -963,4 +963,3 @@ window.addEventListener('load', function () {
 
     init(); // app initialize
 });
-

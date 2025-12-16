@@ -70,6 +70,9 @@ router.post("/api/studentresult", async (req, res) => {
       date
     } = req.body;
 
+        // Check if result already exists
+  
+
     const newResult = new Result({
       studentID,
       teacherID,
@@ -127,7 +130,7 @@ router.get("/api/studentsResult/:studentID", async (req, res) => {
     res.status(200).json({
       success: true,
       count: results.length,
-      averagePercentage: averagePercentage,
+      averagePercentage: averagePercentage || 0,
       data: results
     });
 
@@ -141,12 +144,40 @@ router.get("/api/studentsResult/:studentID", async (req, res) => {
 });
 
 
+//student result with examId and studentID
+
+router.get("/api/studentsResult/:studentID/examID/:examID", async (req, res) => {
+  try {
+    const { studentID, examID } = req.params;
+
+    const results = await Result.find({ studentID, examID });
+
+    res.status(200).json({
+      success: true,
+      count: results.length,
+      data: results
+    });
+
+  } catch (error) {
+    console.error("Error fetching student exam result:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error"
+    });
+  }
+});
+
+
+
+
+
+
 
 router.get("/api/studentsResultbyExamID/:examID", async (req, res) => {
   try {
     const { examID } = req.params;
 
-    const resultsbyExamid = await Result.find({ examID });
+    const resultsbyExamid = await Result.find({ examID }).populate("studentID","name");
    
 
     

@@ -282,7 +282,7 @@ async function createAndAssignExam() {
         endTime: new Date(endTime),
         examTime: totalTime, // in minutesz
         markPerQuestion: marksPerQuestion,
-        totalMarks: selectedQuestions.size * marksPerQuestion
+        totalMarks: (selectedQuestions.size * marksPerQuestion).toFixed(2)
     };
 
     try {
