@@ -55,17 +55,59 @@ router.get("/api/students", async (req, res) => {
 });
 
 //show all questions for students
-router.get("/api/assigned-questions/:studentId", async (req, res) => {
+router.get("/api/exam/:examId/student/:studentId", async (req, res) => {
+  const { examId, studentId } = req.params;
+
+  const exam = await AssignedQuestion.findOne({
+    _id: examId,
+    studentIDs: studentId
+  }).populate("questionIds");
+
+  if (!exam) {
+    return res.status(403).json({ error: "Not allowed" });
+  }
+
+  res.json(exam.questionIds);
+});
+
+
+// 
+router.get("/api/exams/student/:studentId", async (req, res) => {
   try {
     const { studentId } = req.params;
-    const assignments = await AssignedQuestion.find({ studentIDs: studentId }).populate("questionIds");
-    const questions = assignments.flatMap(assignment => assignment.questionIds);
-    res.json(questions);
+    const now = new Date();
+
+    const exams = await AssignedQuestion.find({
+      studentIDs: studentId
+    })
+    .populate("questionIds", "_id")
+    .select("examTitle startTime endTime examTime markPerQuestion totalMarks teacherID");
+
+    // frontend friendly format
+    const formatted = exams.map(exam => ({
+      examId: exam._id,
+      teacherID:exam.teacherID,
+      examTitle: exam.examTitle,
+      questionCount: exam.questionIds.length,
+      totalMarks: exam.totalMarks,
+      examTime: exam.examTime,
+      startTime: exam.startTime,
+      endTime: exam.endTime,
+      markPerQuestion: exam.markPerQuestion,
+      
+      status: now < exam.endTime ? "active" : "completed"
+
+      
+    
+    }));
+
+    res.json(formatted);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Error fetching assigned questions" });
+    res.status(500).json({ error: "Failed to load exams" });
   }
 });
+
 
 
 // AssignedQuestions.js-তে এই রাউট যোগ করুন

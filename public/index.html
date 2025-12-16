@@ -19,11 +19,7 @@
 
   <!-- pdfmake-->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="script.js ">console.log("GLOBAL TEST:", window.goToStudentLogRegPage);
-
-  </script>
-  <!-- assign script -->
-  <script src="assign.js"></script>
+  <script src="script.js"></script>
   <!-- exam.js -->
   <script src="exam.js"></script>
 
@@ -170,7 +166,7 @@
         </div>
 
         <div class="action-buttons">
-          <button class="btn btn-success" onclick="addQuestion()">➕ Add Question</button>
+          <button class="btn btn-success" onclick="addQuestion(event)">➕ Add Question</button>
           <button class="btn btn-warning" onclick="previewQuestion()">👁️ Preview Question</button>
           <button class="btn btn-danger" onclick="clearForm()">🗑️ Clear Form</button>
         </div>
@@ -212,7 +208,7 @@
         </div>
       </div>
 
-      // Teacher Create & Assign Exam Section
+      <!--Teacher Create & Assign Exam Section-->
       <!-- Stylish Header -->
       <div style="
         background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
@@ -241,70 +237,216 @@
     ">
 
         <!-- Step 1 -->
-        <h3
-          style="font-size: 21px; font-weight: 700; color: #374151; margin-bottom: 25px; display: flex; gap: 12px; align-items: center;">
+        <h3 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-3">
           <span
-            style="background:#3b82f6; color:white; width:34px; height:34px; display:flex; align-items:center; justify-content:center; border-radius:10px;">1</span>
+            class="w-9 h-9 bg-blue-500 text-white rounded-xl flex items-center justify-center text-lg font-semibold">1</span>
           Basic Exam Information
         </h3>
 
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:25px; margin-bottom:25px;">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <!-- Exam Title -->
-          <div>
-            <label style="display:block; font-size:14px; font-weight:600; color:#4b5563; margin-bottom:6px;">Exam
-              Title</label>
-            <input id="examTitle" type="text" placeholder="e.g., Mid Term Exam – Math" style="
-                           width: 100%; padding: 15px; border-radius: 12px;
-                           border: 1px solid #d1d5db; font-size: 15px;
-                           transition: 0.25s; outline: none;
-                       "
-              onfocus="this.style.borderColor='#3b82f6'; this.style.boxShadow='0 0 0 3px rgba(59,130,246,0.18)'"
-              onblur="this.style.borderColor='#d1d5db'; this.style.boxShadow='none'">
+          <div class="space-y-2">
+            <label class="block text-sm font-semibold text-gray-700">Exam Title</label>
+            <input id="examTitle" type="text" placeholder="e.g., Mid Term Exam – Math"
+              class="w-full px-4 py-3.5 border border-gray-300 rounded-xl text-gray-700 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 shadow-sm hover:shadow-md">
           </div>
 
-          <!-- Marks -->
-          <div>
-            <label style="display:block; font-size:14px; font-weight:600; color:#4b5563; margin-bottom:6px;">Marks Per
-              Question</label>
-            <input id="marksPerQuestion" type="number" min="1" value="1" style="
-                           width: 100%; padding: 15px; border-radius: 12px;
-                           border: 1px solid #d1d5db; font-size: 15px;
-                           transition: 0.25s; outline: none;
-                       "
-              onfocus="this.style.borderColor='#3b82f6'; this.style.boxShadow='0 0 0 3px rgba(59,130,246,0.18)'"
-              onblur="this.style.borderColor='#d1d5db'; this.style.boxShadow='none'">
+          <!-- Marks Per Question -->
+          <div class="space-y-2">
+            <label class="block text-sm font-semibold text-gray-700">Marks Per Question</label>
+            <div class="relative">
+              <input id="marksPerQuestion" type="number" min="1" value="1"
+                class="w-full px-4 py-3.5 border border-gray-300 rounded-xl text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 shadow-sm hover:shadow-md appearance-none">
+              <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                <span class="text-gray-500 text-sm">marks</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:25px;">
-          <!-- Start -->
-          <div>
-            <label style="display:block; font-size:14px; font-weight:600; color:#4b5563; margin-bottom:6px;">Start
-              Time</label>
-            <input id="startTime" type="datetime-local" style="
-                           width: 100%; padding: 15px; border-radius: 12px;
-                           border: 1px solid #d1d5db; font-size: 15px;
-                           transition: 0.25s; outline: none;
-                       "
-              onfocus="this.style.borderColor='#3b82f6'; this.style.boxShadow='0 0 0 3px rgba(59,130,246,0.18)'"
-              onblur="this.style.borderColor='#d1d5db'; this.style.boxShadow='none'">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+          <!-- Total Duration -->
+          <div class="space-y-2">
+            <label class="block text-sm font-semibold text-gray-700">Exam Duration</label>
+            <div class="relative">
+              <input id="totalTime" type="number" min="1" value="60"
+                class="w-full px-4 py-3.5 border border-gray-300 rounded-xl text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 shadow-sm hover:shadow-md appearance-none">
+              <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                <span class="text-gray-500 text-sm">minutes</span>
+              </div>
+            </div>
+            <p class="text-xs text-gray-500 mt-1">Total time allowed for the exam</p>
           </div>
 
-          <!-- End -->
-          <div>
-            <label style="display:block; font-size:14px; font-weight:600; color:#4b5563; margin-bottom:6px;">End
-              Time</label>
-            <input id="endTime" type="datetime-local" style="
-                           width: 100%; padding: 15px; border-radius: 12px;
-                           border: 1px solid #d1d5db; font-size: 15px;
-                           transition: 0.25s; outline: none;
-                       "
-              onfocus="this.style.borderColor='#3b82f6'; this.style.boxShadow='0 0 0 3px rgba(59,130,246,0.18)'"
-              onblur="this.style.borderColor='#d1d5db'; this.style.boxShadow='none'">
+          <!-- Start Time -->
+          <div class="space-y-2">
+            <label class="block text-sm font-semibold text-gray-700">Start Date & Time</label>
+            <div class="relative group">
+              <input id="startTime" type="datetime-local"
+                class="w-full px-4 py-3.5 border border-gray-300 rounded-xl text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 shadow-sm hover:shadow-md appearance-none [color-scheme:light]">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- End Time -->
+          <div class="space-y-2">
+            <label class="block text-sm font-semibold text-gray-700">End Date & Time</label>
+            <div class="relative group">
+              <input id="endTime" type="datetime-local"
+                class="w-full px-4 py-3.5 border border-gray-300 rounded-xl text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 shadow-sm hover:shadow-md appearance-none [color-scheme:light]">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+              </div>
+            </div>
           </div>
         </div>
 
+        <!-- Duration Info Card -->
+        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-xl p-4 mb-6">
+          <div class="flex items-start gap-3">
+            <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+            <div>
+              <h4 class="text-sm font-semibold text-gray-800 mb-1">Time Settings Information</h4>
+              <ul class="text-xs text-gray-600 space-y-1">
+                <li class="flex items-center gap-2">
+                  <div class="w-1.5 h-1.5 bg-blue-500 rounded-full"></div>
+                  <span><span class="font-medium">Duration:</span> Total time students have to complete the exam</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <div class="w-1.5 h-1.5 bg-blue-500 rounded-full"></div>
+                  <span><span class="font-medium">Start Time:</span> When the exam becomes available</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <div class="w-1.5 h-1.5 bg-blue-500 rounded-full"></div>
+                  <span><span class="font-medium">End Time:</span> When the exam automatically closes</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
 
+        <!-- Auto-calculate End Time (Optional) -->
+        <div class="flex items-center gap-3 mb-6">
+          <button type="button" onclick="calculateEndTime()"
+            class="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white text-sm font-semibold rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2">
+              </path>
+            </svg>
+            Auto-calculate End Time
+          </button>
+          <span class="text-xs text-gray-500">
+            Automatically sets end time based on start time and duration
+          </span>
+        </div>
+
+        <script>
+          function calculateEndTime() {
+            const startTimeInput = document.getElementById('startTime');
+            const durationInput = document.getElementById('totalTime');
+            const endTimeInput = document.getElementById('endTime');
+
+            if (!startTimeInput.value || !durationInput.value) {
+              alert('Please set start time and duration first');
+              return;
+            }
+
+            const startTime = new Date(startTimeInput.value);
+            const duration = parseInt(durationInput.value);
+
+            if (isNaN(duration) || duration <= 0) {
+              alert('Please enter a valid duration');
+              return;
+            }
+
+            // Add duration in minutes
+            const endTime = new Date(startTime.getTime() + duration * 60000);
+
+            // Format to YYYY-MM-DDThh:mm
+            const endTimeString = endTime.toISOString().slice(0, 16);
+            endTimeInput.value = endTimeString;
+
+            // Show success feedback
+            const button = event.target.closest('button');
+            const originalHTML = button.innerHTML;
+            button.innerHTML = `
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          Calculated!
+        `;
+            button.classList.add('bg-green-500', 'from-green-500', 'to-green-600', 'hover:from-green-600', 'hover:to-green-700');
+
+            setTimeout(() => {
+              button.innerHTML = originalHTML;
+              button.classList.remove('bg-green-500', 'from-green-500', 'to-green-600', 'hover:from-green-600', 'hover:to-green-700');
+            }, 2000);
+          }
+
+          // Set default date/time values
+          document.addEventListener('DOMContentLoaded', function () {
+            // Set start time to next hour
+            const now = new Date();
+            const nextHour = new Date(now);
+            nextHour.setHours(nextHour.getHours() + 1);
+            nextHour.setMinutes(0, 0, 0);
+
+            const startTimeInput = document.getElementById('startTime');
+            startTimeInput.value = nextHour.toISOString().slice(0, 16);
+
+            // Auto-calculate end time on start time change
+            startTimeInput.addEventListener('change', function () {
+              if (document.getElementById('totalTime').value) {
+                calculateEndTime();
+              }
+            });
+
+            // Auto-calculate end time on duration change
+            document.getElementById('totalTime').addEventListener('input', function () {
+              if (document.getElementById('startTime').value) {
+                calculateEndTime();
+              }
+            });
+          });
+        </script>
+
+        <style>
+          /* Custom styles for number input arrows */
+          input[type="number"]::-webkit-inner-spin-button,
+          input[type="number"]::-webkit-outer-spin-button {
+            opacity: 1;
+            height: 2em;
+            margin-right: 8px;
+          }
+
+          /* Custom datetime-local styling */
+          input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+            background: transparent;
+            bottom: 0;
+            color: transparent;
+            cursor: pointer;
+            height: auto;
+            left: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: auto;
+          }
+        </style>
         <!-- Step 2 -->
         <h3
           style="font-size:21px; font-weight:700; color:#374151; margin:35px 0 20px; display:flex; gap:12px; align-items:center;">
@@ -467,8 +609,8 @@
       <p class="dashboard-subtitle">Take interactive quizzes with mathematical support</p>
     </div>
 
-    <div class="quiz-selector">
-      <h2 style="color: white; margin-bottom: 20px; font-size: 2rem; font-weight: 700;">📋 Available Quizzes</h2>
+    <div class="quiz-selector" <h2 style="color: white; margin-bottom: 20px; font-size: 2rem; font-weight: 700;">📋
+      Available Quizzes</h2>
       <div class="quiz-cards" id="quizCards">
         <div class="quiz-card" onclick="startStudentQuiz('teacher-quiz')">
           <h3 class="quiz-card-title">📊 Teacher Created Quiz</h3>

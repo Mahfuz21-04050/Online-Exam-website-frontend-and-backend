@@ -5,33 +5,7 @@
 //Global variables
     let currentMode = 'landing'; // landing, teacher, student, quiz
     let quizQuestions = [];
-    let sampleQuestions = [
-      {
-        question: "What is the value of \\(\\frac{1}{2} + \\frac{1}{3}\\)?",
-        choices: ["\\(\\frac{2}{5}\\)", "\\(\\frac{5}{6}\\)", "\\(\\frac{1}{5}\\)", "\\(\\frac{3}{6}\\)"],
-        correct: 1
-      },
-      {
-        question: "Solve for \\(x\\): \\(x^2 - 4 = 0\\)",
-        choices: ["\\(x = \\pm 2\\)", "\\(x = 4\\)", "\\(x = 2\\)", "\\(x = 0\\)"],
-        correct: 0
-      },
-      {
-        question: "What is \\(\\sqrt{16} + \\sqrt{25}\\)?",
-        choices: ["\\(9\\)", "\\(41\\)", "\\(\\sqrt{41}\\)", "\\(\\sqrt{9}\\)"],
-        correct: 0
-      },
-      {
-        question: "The area of a circle with radius \\(r\\) is:",
-        choices: ["\\(2\\pi r\\)", "\\(\\pi r^2\\)", "\\(\\pi r\\)", "\\(2\\pi r^2\\)"],
-        correct: 1
-      },
-      {
-        question: "What is \\(\\lim_{x \\to 0} \\frac{\\sin x}{x}\\)?",
-        choices: ["\\(0\\)", "\\(1\\)", "\\(\\infty\\)", "undefined"],
-        correct: 1
-      }
-    ];
+
 
     // Quiz state
     let currentQuestionIndex = 0;
@@ -236,7 +210,7 @@ function loadFromLocalStorage() {
 }
 
 // Updated addQuestion function
-function addQuestion() {
+function addQuestion(event) {
     const questionText = document.getElementById('questionInput').value.trim();
     const choice1 = document.getElementById('choice1').value.trim();
     const choice2 = document.getElementById('choice2').value.trim();

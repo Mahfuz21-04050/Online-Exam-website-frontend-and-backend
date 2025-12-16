@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - Online Exam System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="student.js"></script>
+    <link rel="stylesheet" href="student.css">
+
+</head>
+
+<body>
+    <!-- Student Dashboard -->
+    <div id="studentDashboard" class="student-dashboard">
+        <div class="dashboard-header">
+            <button class="back-btn" onclick="showLandingPage()">
+                <i class="fas fa-arrow-left"></i> Back
+            </button>
+            <h1 class="dashboard-title">🎓 Student Dashboard</h1>
+            <p class="dashboard-subtitle">Welcome, <span id="studentName">John Doe</span>!</p>
+
+            <div class="quick-stats">
+                <div class="stat-card">
+                    <span class="stat-icon">📝</span>
+                    <div class="stat-info">
+                        <div class="stat-number" id="activeExamsCount">2</div>
+                        <div class="stat-label">Active Exams</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <span class="stat-icon">✅</span>
+                    <div class="stat-info">
+                        <div class="stat-number" id="completedExamsCount">2</div>
+                        <div class="stat-label">Completed Exams</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <span class="stat-icon">❌</span>
+                    <div class="stat-info">
+                        <div class="stat-number" id="absentExamsCount">2</div>
+                        <div class="stat-label">Absence</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <span class="stat-icon">⭐</span>
+                    <div class="stat-info">
+                        <div class="stat-number" id="averageScore">87%</div>
+                        <div class="stat-label">Average Score</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Dashboard Tabs -->
+        <div class="dashboard-tabs">
+            <button class="tab-btn active" onclick="switchTab('activeExams')" id="tabActiveExams">
+                <i class="fas fa-clipboard-list"></i> Active Exams
+            </button>
+            <button class="tab-btn" onclick="switchTab('pastExams')" id="tabPastExams">
+                <i class="fas fa-history"></i> Past Exams
+            </button>
+            <button class="tab-btn" onclick="switchTab('results')" id="tabResults">
+                <i class="fas fa-chart-bar"></i> Results
+            </button>
+        </div>
+
+        <!-- Active Exams Section -->
+        <div id="activeExamsSection" class="dashboard-section">
+            <h2><i class="fas fa-clipboard-list"></i> Active Exams</h2>
+            <p class="section-subtitle">Exams currently available for you to take</p>
+            <div id="activeExamsList" class="exams-grid">
+                <!-- Active exams will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Past Exams Section -->
+        <div id="pastExamsSection" class="dashboard-section hidden">
+            <h2><i class="fas fa-history"></i> Past Exams</h2>
+            <p class="section-subtitle">Exams you have already completed</p>
+            <div id="pastExamsList" class="exams-grid">
+                <!-- Past exams will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="resultsSection" class="dashboard-section hidden">
+            <h2><i class="fas fa-chart-bar"></i> Detailed Results</h2>
+            <p class="section-subtitle">View your performance in all exams</p>
+            <div id="detailedResultsList">
+                <!-- Results will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Exam Interface -->
+    <div id="examContainer" class="exam-container hidden">
+        <!-- Exam Header -->
+        <div class="exam-header">
+            <div class="exam-info">
+                <h1 id="examTitleDisplay">Mathematics Final Exam</h1>
+                <div class="exam-meta">
+                    <span class="exam-meta-item" id="examQuestionsCount">10 Questions</span>
+                    <span class="exam-meta-item" id="examTotalMarks">Total: 100 marks</span>
+                    <span class="exam-meta-item" id="examTimeRemaining">⏱️ Time: 01:30:00</span>
+                </div>
+            </div>
+            <button class="btn btn-primary" onclick="confirmSubmitExam()">📤 Submit Exam</button>
+        </div>
+
+        <!-- Exam Timer Alert -->
+        <div id="timeWarning" class="time-warning hidden">
+            ⚠️ <span id="timeWarningText">Time is running out!</span>
+        </div>
+
+        <!-- Exam Progress -->
+        <div class="exam-progress">
+            <div class="progress-bar">
+                <div id="examProgressFill" class="progress-fill" style="width: 10%;"></div>
+            </div>
+            <div class="progress-info">
+                <span id="currentQuestionNumber">Question 1</span>
+                <span id="examProgressText">1/10</span>
+            </div>
+        </div>
+
+        <!-- Questions Navigation -->
+        <div id="questionsNav" class="questions-nav">
+            <!-- Questions numbers will be dynamically added here -->
+        </div>
+
+        <!-- Question Display Area -->
+        <div class="question-display-area">
+            <div class="question-card" id="currentQuestionCard">
+                <div class="question-header">
+                    <h3 id="questionNumberDisplay">Question 1</h3>
+                    <span class="marks-badge" id="questionMarks">10 marks</span>
+                </div>
+
+                <div class="question-content">
+                    <div class="question-text" id="questionTextDisplay">
+
+                    </div>
+
+                    <!-- Options/Answer Area -->
+                    <div class="answer-section">
+                        <!-- Multiple Choice -->
+                        <div id="mcqOptions" class="mcq-options">
+                            <div class="option-row" onclick="selectMCQOption(0)">
+                                <span class="option-label">A</span>
+                                <div class="option-text" id="optionA">3.14</div>
+                            </div>
+                            <div class="option-row" onclick="selectMCQOption(1)">
+                                <span class="option-label">B</span>
+                                <div class="option-text" id="optionB">3.15</div>
+                            </div>
+                            <div class="option-row" onclick="selectMCQOption(2)">
+                                <span class="option-label">C</span>
+                                <div class="option-text" id="optionC">3.16</div>
+                            </div>
+                            <div class="option-row" onclick="selectMCQOption(3)">
+                                <span class="option-label">D</span>
+                                <div class="option-text" id="optionD">3.17</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-navigation">
+                    <button class="btn btn-outline" onclick="previousQuestionExam()" id="prevQuestionBtn">
+                        ← Previous
+                    </button>
+                    <div class="answer-status" id="answerStatus">Not answered</div>
+                    <button class="btn btn-primary" onclick="nextQuestionExam()" id="nextQuestionBtn">
+                        Next →
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Exam Controls -->
+        <div class="exam-controls">
+            <button class="btn btn-outline" onclick="flagQuestion()" id="flagBtn">
+                🚩 Flag for Review
+            </button>
+            <button class="btn btn-outline" onclick="reviewFlagged()">
+                📋 Review Flagged
+            </button>
+            <button class="btn btn-primary" onclick="saveAndContinue()">
+                💾 Save & Continue
+            </button>
+        </div>
+    </div>
+
+    <!-- Results Interface -->
+    <div id="resultsContainer" class="results-container hidden">
+        <div class="results-header">
+            <h1>📊 Exam Results</h1>
+            <button class="btn btn-outline" onclick="backToDashboard()">
+                ← Back to Dashboard
+            </button>
+        </div>
+
+        <div class="results-summary">
+            <div class="main-score">
+                <div class="score-display" id="finalScoreDisplay"></div>
+                <div class="score-label">Final Score</div>
+                <div class="score-details" id="scoreDetails">85/100</div>
+            </div>
+
+            <div class="result-stats">
+                <div class="stat-item">
+                    <span class="stat-icon">✅</span>
+                    <div>
+                        <div class="stat-value" id="correctAnswers">8</div>
+                        <div class="stat-label">Correct</div>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-icon">❌</span>
+                    <div>
+                        <div class="stat-value" id="wrongAnswers">2</div>
+                        <div class="stat-label">Wrong</div>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-icon">⏱️</span>
+                    <div>
+                        <div class="stat-value" id="timeTaken">45:30</div>
+                        <div class="stat-label">Time Taken</div>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-icon">⏭️</span>
+                    <div>
+                        <div class="stat-value" id="skipedAnswer"></div>
+                        <div class="stat-label">Skipped</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detailed Results -->
+        <div class="detailed-results">
+            <h2>📋 Question-wise Analysis</h2>
+            <div id="questionAnalysis" class="question-analysis">
+                <!-- Question analysis will be dynamically added here -->
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="results-actions"
+            style="display: flex; gap: 15px; justify-content: center; margin-top: 30px; flex-wrap: wrap;">
+            <button class="btn btn-success" onclick="downloadResult()">
+                📥 Download Result
+            </button>
+            <button class="btn btn-primary" onclick="retakeExam()">
+                🔄 Retake Exam
+            </button>
+        </div>
+    </div>
+
+    <!-- Timer Auto-Submit Modal -->
+    <div id="autoSubmitModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>⏰ Time's Up!</h2>
+            </div>
+            <div class="modal-body">
+                <p>The exam time has ended. Your answers have been automatically submitted.</p>
+                <div class="timer-warning">🔄 Redirecting to results in <span id="redirectTimer">5</span> seconds...
+                </div>
+            </div>
+            <div class="modal-footer" style="margin-top: 20px;">
+                <button class="btn btn-primary" onclick="viewResultsNow()">
+                    View Results Now
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+
+
+</body>
+
+</html>

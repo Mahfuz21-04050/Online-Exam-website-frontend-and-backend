@@ -258,6 +258,7 @@ async function createAndAssignExam() {
     const examTitle = document.getElementById('examTitle').value.trim();
     const startTime = document.getElementById('startTime').value;
     const endTime = document.getElementById('endTime').value;
+    const totalTime = document.getElementById("totalTime").value;
     const marksPerQuestion = parseFloat(document.getElementById('marksPerQuestion').value);
 
     // Validation
@@ -273,11 +274,13 @@ async function createAndAssignExam() {
     // Create exam object with correct format
     const exam = {
         teacherID: teacherID,
-        studentIDs: Array.from(selectedStudents), // MongoDB ObjectId গুলো
+        studentIDs: Array.from(selectedStudents),
+        // MongoDB ObjectId গুলো
+        examTitle:examTitle,
         questionIds: Array.from(selectedQuestions).map(index => quizQuestions[index]._id), // Convert indices to ObjectIds
         startTime: new Date(startTime),
         endTime: new Date(endTime),
-        examTime: Math.floor((new Date(endTime) - new Date(startTime)) / 60000), // in minutes
+        examTime: totalTime, // in minutesz
         markPerQuestion: marksPerQuestion,
         totalMarks: selectedQuestions.size * marksPerQuestion
     };

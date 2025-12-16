@@ -452,6 +452,7 @@
     }
 
     //fetch server to verify student login
+    // fetch server to verify student/teacher login
     async function verificationSignIn() {
       const email = document.getElementById('loginEmail').value.trim();
       const password = document.getElementById('loginPassword').value.trim();
@@ -465,33 +466,37 @@
       const data = await response.json();
 
 
+
       if (data.success) {
-        //Store user data in localStorage
 
+        // Common storage
         localStorage.setItem("userId", data.user.id);
-        localStorage.setItem("role", data.user.role); -
+        localStorage.setItem("role", data.user.role);
+        localStorage.setItem("userName", data.user.name);
 
-
-          showMessage("Login successful!", "success");
+        showMessage("Login successful!", "success");
         console.log("Logged in user data:", data);
 
+        // 🔁 Role based redirect
         if (data.user.role === "teacher") {
-          localStorage.setItem('role', 'teacher');
-          localStorage.setItem('teacherId', data.user.id);
-          localStorage.setItem('showteacher', 'true');
-        } else {
-          localStorage.setItem('role', 'student');
-          localStorage.setItem('studentId', data.user.id);
-          localStorage.setItem('showstudent', 'true');
+
+          localStorage.setItem("teacherId", data.user.id);
+          localStorage.setItem("showteacher", "true");
+
+          // 👉 Teacher Dashboard
+          window.location.href = "/index.html";
+
+        } else if (data.user.role === "student") {
+
+          localStorage.setItem("studentId", data.user.id);
+          localStorage.setItem("showstudent", "true");
+
+          // 👉 Student Dashboard
+          window.location.href = "/studentdash.html";
         }
 
-        window.location.href = "/index.html";
-      }
-
-
-
-      else {
-        showMessage(data.message || "Login failed.", "error");
+      } else {
+        showMessage(data.message || "Login failed", "error");
       }
     }
 
