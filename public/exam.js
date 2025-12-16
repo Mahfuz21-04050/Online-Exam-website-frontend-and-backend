@@ -282,7 +282,7 @@ async function createAndAssignExam() {
         endTime: new Date(endTime),
         examTime: totalTime, // in minutesz
         markPerQuestion: marksPerQuestion,
-        totalMarks: (selectedQuestions.size * marksPerQuestion).toFixed(2)
+        totalMarks: Number(selectedQuestions.size * marksPerQuestion).toFixed(2)
     };
 
     try {
@@ -471,6 +471,12 @@ function renderExamsList() {
     container.innerHTML = html;
 }
 
+// View button er jonno function (EITA ADD KORUN)
+function viewExamDetails(examId) {
+    window.location.href = `examresult.html?examId=${examId}`;
+}
+window.viewExamDetails = viewExamDetails;
+
 // Reset exam form
 function resetExamForm() {
     document.getElementById('examTitle').value = '';
@@ -553,6 +559,13 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+
+
+
+//view exam detail
+
+// Add this function to your script.js or in the script section
+
 
 // Initialize when page loads
 window.addEventListener('load', function() {
